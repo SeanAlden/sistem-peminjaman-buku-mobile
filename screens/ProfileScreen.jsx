@@ -239,7 +239,7 @@ export default function ProfileScreen() {
 
   const handlePress = (action) => {
     if (action === "Logout") {
-      Alert.alert("Konfirmasi Logout", "Apakah Anda yakin ingin keluar?", [
+      Alert.alert("Konfirmasi Logout", "Apakah Anda yakin ingin logout?", [
         { text: "Batal", style: "cancel" },
         { text: "Logout", style: "destructive", onPress: handleLogout },
       ]);
