@@ -657,6 +657,7 @@ import CategorySearchScreen from "./screens/CategorySearchScreen";
 import BookSearchScreen from "./screens/BookSearchScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import FavoriteScreen from "./screens/FavoriteScreen";
 
 import { AuthContext, AuthProvider } from "./context/AuthContext"; // penting!
 
@@ -680,12 +681,30 @@ function HomeStack() {
         },
       }}
     >
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      <Stack.Screen name="CategoryDetail" component={CategoryDetailScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Category Detail" component={CategoryDetailScreen} />
       <Stack.Screen name="BookDetail" component={BookDetailScreen} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="CategorySearch" component={CategorySearchScreen} />
       <Stack.Screen name="BookSearch" component={BookSearchScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function ProfileStack() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: orangeThemeColor },
+        headerTintColor: "#ffffff",
+        headerTitleAlign: "center",
+        headerTitleStyle: {
+          fontSize: 22,
+          fontWeight: "bold",
+        },
+      }}
+    >
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
     </Stack.Navigator>
   );
 }
@@ -694,7 +713,7 @@ function HomeStack() {
 function AppTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="HomeScreen"
       screenOptions={({ route }) => ({
         headerStyle: { backgroundColor: orangeThemeColor },
         headerTintColor: "#ffffff",
@@ -702,22 +721,34 @@ function AppTabs() {
         headerTitleStyle: { fontSize: 22, fontWeight: "bold" },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          if (route.name === "Home") iconName = focused ? "home" : "home-outline";
-          else if (route.name === "Loan") iconName = focused ? "book" : "book-outline";
-          else if (route.name === "Notification") iconName = focused ? "notifications" : "notifications-outline";
-          else if (route.name === "Profile") iconName = focused ? "person-circle" : "person-circle-outline";
+          if (route.name === "HomeScreen")
+            iconName = focused ? "home" : "home-outline";
+          else if (route.name === "Loan")
+            iconName = focused ? "book" : "book-outline";
+          else if (route.name === "Notification")
+            iconName = focused ? "notifications" : "notifications-outline";
+          else if (route.name === "Profile")
+            iconName = focused ? "person-circle" : "person-circle-outline";
 
           return <Icon name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: "#ffffff",
         tabBarInactiveTintColor: "#ffc9b5",
-        tabBarStyle: { paddingTop: 5, backgroundColor: orangeThemeColor, borderTopWidth: 0 },
+        tabBarStyle: {
+          paddingTop: 5,
+          backgroundColor: orangeThemeColor,
+          borderTopWidth: 0,
+        },
       })}
     >
-      <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
+      <Tab.Screen
+        name="HomeScreen"
+        component={HomeStack}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen name="Loan" component={LoanScreen} />
       <Tab.Screen name="Notification" component={NotificationScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Profile" component={ProfileStack} options={{headerShown:false}} />
     </Tab.Navigator>
   );
 }
@@ -748,10 +779,9 @@ export default function App() {
     <SafeAreaProvider>
       <AuthProvider>
         {/* <NavigationContainer> */}
-          <RootNavigator />
+        <RootNavigator />
         {/* </NavigationContainer> */}
       </AuthProvider>
     </SafeAreaProvider>
   );
 }
-

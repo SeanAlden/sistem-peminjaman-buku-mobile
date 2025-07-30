@@ -304,7 +304,7 @@ export default function ProfileScreen() {
 
           <TouchableOpacity
             className="flex-row items-center py-3 border-b border-gray-200"
-            onPress={() => handlePress("Favorite")}
+            onPress={() => navigation.navigate("FavoriteScreen")}
           >
             <Ionicons name="heart-outline" size={20} color="#555" />
             <Text className="ml-3 text-base text-gray-800">Favorite</Text>

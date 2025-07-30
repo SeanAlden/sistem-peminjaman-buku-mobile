@@ -760,11 +760,13 @@ import {
 } from "react-native";
 import { BASE_URL } from "../api/responseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function HomeScreen({ navigation }) {
   const [categories, setCategories] = useState([]);
   const [books, setBooks] = useState([]);
   const [userName, setUserName] = useState("Guest");
+  const [favorites, setFavorites] = useState([]);
 
   const [imageError, setImageError] = useState(false);
   // const isValidUrl = item.image_url && item.image_url.trim() !== "";
@@ -795,12 +797,48 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
+  const toggleFavorite = async (bookId) => {
+    const isFavorited = favorites.includes(bookId);
+    const token = await AsyncStorage.getItem("auth_token");
+    try {
+      const response = await fetch(`${BASE_URL}/api/favorites`, {
+        method: isFavorited ? "DELETE" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ book_id: bookId }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setFavorites((prev) =>
+          isFavorited ? prev.filter((id) => id !== bookId) : [...prev, bookId]
+        );
+      }
+    } catch (error) {
+      console.error("Favorite toggle error:", error);
+    }
+  };
+
+  const fetchFavorites = async () => {
+    const token = await AsyncStorage.getItem("auth_token");
+    const res = await fetch(`${BASE_URL}/api/favorites`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+    if (data.success) {
+      setFavorites(data.data.map((book) => book.id));
+    }
+  };
+
   useEffect(() => {
     fetchData();
     loadUser(); // ambil user dari async storage
+    fetchFavorites();
 
     const interval = setInterval(() => {
       fetchData(); // fetch setiap 10 detik
+      fetchFavorites();
     }, 10000); // 10000ms = 10 detik
 
     return () => clearInterval(interval); // bersihkan interval saat unmount
@@ -809,7 +847,7 @@ export default function HomeScreen({ navigation }) {
   const renderCategory = ({ item }) => (
     <TouchableOpacity
       onPress={() =>
-        navigation.navigate("CategoryDetail", {
+        navigation.navigate("Category Detail", {
           categoryId: item.id,
           categoryName: item.name,
         })
@@ -826,35 +864,83 @@ export default function HomeScreen({ navigation }) {
     </TouchableOpacity>
   );
 
+  // const renderBook = ({ item }) => (
+  //   <TouchableOpacity
+  //     onPress={() => navigation.navigate("BookDetail", { book: item })}
+  //     className="bg-white rounded-xl p-3 mr-3 w-[160px] shadow-md"
+  //   >
+  //     {/* <Image
+  //       source={{ uri: item.image_url }}
+  //       className="w-full h-[150px] rounded-lg mb-2"
+  //       resizeMode="contain"
+  //     /> */}
+  //     {/* <Image
+  //       source={
+  //         item.image_url
+  //           ? { uri: item.image_url }
+  //           : require("../assets/avatar.png") // Pastikan path sesuai struktur project Anda
+  //       }
+  //       className="w-full h-[150px] rounded-lg mb-2"
+  //       resizeMode="contain"
+  //     /> */}
+  //     <Image
+  //       source={
+  //         (!item.image_url && item.image_url.trim() !== "") || imageError
+  //           ? require("../assets/avatar.png") // gambar default lokal
+  //           : { uri: item.image_url }
+  //       }
+  //       className="w-full h-[150px] rounded-lg mb-2"
+  //       resizeMode="contain"
+  //       onError={() => setImageError(true)}
+  //     />
+  //     <Text
+  //       className="text-lg font-bold text-center text-gray-800"
+  //       numberOfLines={1}
+  //     >
+  //       {item.title}
+  //     </Text>
+  //     <Text className="mt-1 text-center text-gray-800 text-sb">
+  //       {item.author}
+  //     </Text>
+  //     <Text
+  //       className="mt-1 text-xs text-center text-gray-500"
+  //       numberOfLines={2}
+  //       ellipsizeMode="tail"
+  //     >
+  //       Deskripsi: {item.description}
+  //     </Text>
+  //     <Text className="mt-1 text-sm text-center text-gray-800">
+  //       Stok: {item.stock}
+  //     </Text>
+  //     {/* <Text className="mt-1 text-xs text-center text-gray-500">
+  //       Durasi Pinjam: {item.description}
+  //     </Text> */}
+
+  //     <Text className="mt-1 text-xs text-center text-gray-800">
+  //       Durasi Pinjam: {item.loan_duration} hari
+  //     </Text>
+  //   </TouchableOpacity>
+  // );
+
   const renderBook = ({ item }) => (
     <TouchableOpacity
       onPress={() => navigation.navigate("BookDetail", { book: item })}
       className="bg-white rounded-xl p-3 mr-3 w-[160px] shadow-md"
     >
-      {/* <Image
+      <Image
         source={{ uri: item.image_url }}
         className="w-full h-[150px] rounded-lg mb-2"
         resizeMode="contain"
-      /> */}
-      {/* <Image
-        source={
-          item.image_url
-            ? { uri: item.image_url }
-            : require("../assets/avatar.png") // Pastikan path sesuai struktur project Anda
-        }
-        className="w-full h-[150px] rounded-lg mb-2"
-        resizeMode="contain"
-      /> */}
-      <Image
-        source={
-          (!item.image_url && item.image_url.trim() !== "") || imageError
-            ? require("../assets/avatar.png") // gambar default lokal
-            : { uri: item.image_url }
-        }
-        className="w-full h-[150px] rounded-lg mb-2"
-        resizeMode="contain"
-        onError={() => setImageError(true)}
       />
+      <View className="absolute z-10 right-3 top-3">
+        <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
+          <AntDesign
+            name={favorites.includes(item.id) ? "heart" : "hearto"}
+            size={20}
+            color="red"
+          />
+        </TouchableOpacity>
+      </View>
       <Text
         className="text-lg font-bold text-center text-gray-800"
         numberOfLines={1}
@@ -863,23 +949,6 @@ export default function HomeScreen({ navigation }) {
       </Text>
       <Text className="mt-1 text-center text-gray-800 text-sb">
         {item.author}
-      </Text>
-      <Text
-        className="mt-1 text-xs text-center text-gray-500"
-        numberOfLines={2}
-        ellipsizeMode="tail"
-      >
-        Deskripsi: {item.description}
-      </Text>
-      <Text className="mt-1 text-sm text-center text-gray-800">
-        Stok: {item.stock}
-      </Text>
-      {/* <Text className="mt-1 text-xs text-center text-gray-500">
-        Durasi Pinjam: {item.description}
-      </Text> */}
-
-      <Text className="mt-1 text-xs text-center text-gray-800">
-        Durasi Pinjam: {item.loan_duration} hari
       </Text>
     </TouchableOpacity>
   );

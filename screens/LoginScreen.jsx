@@ -138,15 +138,24 @@ export default function LoginScreen({ navigation }) {
     }
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/login`, { email, password });
+      const res = await axios.post(`${BASE_URL}/api/login`, {
+        email,
+        password,
+      });
 
       await login(res.data.token);
       await AsyncStorage.setItem("auth_user", JSON.stringify(res.data.user));
-      navigation.navigate("AppTabs");
+      // navigation.navigate("AppTabs");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "AppTabs" }],
+      });
     } catch (error) {
       if (error.response) {
         const { status, data } = error.response;
         if (status === 401 && data.message) {
+          alert(data.message);
+        } else if (status === 403 && data.message) {
           alert(data.message);
         } else if (status === 409 && data.message) {
           alert(data.message);
