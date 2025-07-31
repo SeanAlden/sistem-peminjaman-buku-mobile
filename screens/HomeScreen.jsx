@@ -769,6 +769,7 @@ export default function HomeScreen({ navigation }) {
   const [favorites, setFavorites] = useState([]);
 
   const [imageError, setImageError] = useState(false);
+  const [profileImage, setProfileImage] = useState(null); // URL gambar dari server
   // const isValidUrl = item.image_url && item.image_url.trim() !== "";
 
   const fetchData = async () => {
@@ -791,6 +792,11 @@ export default function HomeScreen({ navigation }) {
       if (userData) {
         const user = JSON.parse(userData);
         setUserName(user.name || "Guest");
+        if (user.profile_image) {
+          setProfileImage(
+            `${BASE_URL}/storage/profile_images/${user.profile_image}`
+          );
+        }
       }
     } catch (err) {
       console.error("Gagal load user:", err);
@@ -839,6 +845,7 @@ export default function HomeScreen({ navigation }) {
     const interval = setInterval(() => {
       fetchData(); // fetch setiap 10 detik
       fetchFavorites();
+      loadUser();
     }, 10000); // 10000ms = 10 detik
 
     return () => clearInterval(interval); // bersihkan interval saat unmount
@@ -963,7 +970,11 @@ export default function HomeScreen({ navigation }) {
             {/* Header User */}
             <View className="flex-row items-center px-4 py-3 bg-white">
               <Image
-                source={require("../assets/profile.png")}
+                source={
+                  profileImage
+                    ? { uri: profileImage }
+                    : require("../assets/profile.png")
+                }
                 className="mr-3 rounded-full w-14 h-14"
               />
               <Text className="text-2xl font-bold text-gray-800">

@@ -662,6 +662,8 @@ import FavoriteScreen from "./screens/FavoriteScreen";
 import { AuthContext, AuthProvider } from "./context/AuthContext"; // penting!
 
 import "./global.css";
+import EditProfileScreen from "./screens/EditProfileScreen";
+import EditPasswordScreen from "./screens/EditPasswordScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -705,6 +707,8 @@ function ProfileStack() {
     >
       <Tab.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
+      <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+      <Stack.Screen name="EditPasswordScreen" component={EditPasswordScreen} />
     </Stack.Navigator>
   );
 }
