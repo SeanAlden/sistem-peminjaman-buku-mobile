@@ -761,6 +761,7 @@ import {
 import { BASE_URL } from "../api/responseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
+import axios from "axios";
 
 export default function HomeScreen({ navigation }) {
   const [categories, setCategories] = useState([]);
@@ -788,15 +789,36 @@ export default function HomeScreen({ navigation }) {
 
   const loadUser = async () => {
     try {
+      const token = await AsyncStorage.getItem("auth_token");
+
+      if (!token) return;
       const userData = await AsyncStorage.getItem("auth_user");
       if (userData) {
         const user = JSON.parse(userData);
         setUserName(user.name || "Guest");
-        if (user.profile_image) {
-          setProfileImage(
-            `${BASE_URL}/storage/profile_images/${user.profile_image}`
-          );
+        // if (user.profile_image) {
+        //   setProfileImage(
+        //     `${BASE_URL}/storage/profile_images/${user.profile_image}`
+        //   );
+        // }
+        
+        // Fetch profile image via API
+        const res = await axios.get(`${BASE_URL}/api/user/profile-image`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        });
+
+        const image = res.data.profile_image;
+
+        if (image) {
+          setProfileImage(`${BASE_URL}/storage/profile_images/${image}`);
+        } else {
+          setProfileImage(null);
         }
+      } else {
+        console.error("Data user tidak ditemukan");
       }
     } catch (err) {
       console.error("Gagal load user:", err);
@@ -859,13 +881,13 @@ export default function HomeScreen({ navigation }) {
           categoryName: item.name,
         })
       }
-      className="bg-white rounded-xl p-3 mr-3 items-center w-[110px] shadow-md"
+      className="mr-3 w-[110px] items-center rounded-xl bg-white p-3 shadow-md"
     >
       <Image
         source={require("../assets/default-category.png")}
-        className="w-[60px] h-[60px] mb-2"
+        className="mb-2 h-[60px] w-[60px]"
       />
-      <Text className="text-sm font-semibold text-center text-gray-800">
+      <Text className="text-center text-sm font-semibold text-gray-800">
         {item.name}
       </Text>
     </TouchableOpacity>
@@ -874,11 +896,11 @@ export default function HomeScreen({ navigation }) {
   // const renderBook = ({ item }) => (
   //   <TouchableOpacity
   //     onPress={() => navigation.navigate("BookDetail", { book: item })}
-  //     className="bg-white rounded-xl p-3 mr-3 w-[160px] shadow-md"
+  //     className="mr-3 w-[160px] rounded-xl bg-white p-3 shadow-md"
   //   >
   //     {/* <Image
   //       source={{ uri: item.image_url }}
-  //       className="w-full h-[150px] rounded-lg mb-2"
+  //       className="mb-2 h-[150px] w-full rounded-lg"
   //       resizeMode="contain"
   //     /> */}
   //     {/* <Image
@@ -887,7 +909,7 @@ export default function HomeScreen({ navigation }) {
   //           ? { uri: item.image_url }
   //           : require("../assets/avatar.png") // Pastikan path sesuai struktur project Anda
   //       }
-  //       className="w-full h-[150px] rounded-lg mb-2"
+  //       className="mb-2 h-[150px] w-full rounded-lg"
   //       resizeMode="contain"
   //     /> */}
   //     <Image
@@ -896,34 +918,34 @@ export default function HomeScreen({ navigation }) {
   //           ? require("../assets/avatar.png") // gambar default lokal
   //           : { uri: item.image_url }
   //       }
-  //       className="w-full h-[150px] rounded-lg mb-2"
+  //       className="mb-2 h-[150px] w-full rounded-lg"
   //       resizeMode="contain"
   //       onError={() => setImageError(true)}
   //     />
   //     <Text
-  //       className="text-lg font-bold text-center text-gray-800"
+  //       className="text-center text-lg font-bold text-gray-800"
   //       numberOfLines={1}
   //     >
   //       {item.title}
   //     </Text>
-  //     <Text className="mt-1 text-center text-gray-800 text-sb">
+  //     <Text className="text-sb mt-1 text-center text-gray-800">
   //       {item.author}
   //     </Text>
   //     <Text
-  //       className="mt-1 text-xs text-center text-gray-500"
+  //       className="mt-1 text-center text-xs text-gray-500"
   //       numberOfLines={2}
   //       ellipsizeMode="tail"
   //     >
   //       Deskripsi: {item.description}
   //     </Text>
-  //     <Text className="mt-1 text-sm text-center text-gray-800">
+  //     <Text className="mt-1 text-center text-sm text-gray-800">
   //       Stok: {item.stock}
   //     </Text>
-  //     {/* <Text className="mt-1 text-xs text-center text-gray-500">
+  //     {/* <Text className="mt-1 text-center text-xs text-gray-500">
   //       Durasi Pinjam: {item.description}
   //     </Text> */}
 
-  //     <Text className="mt-1 text-xs text-center text-gray-800">
+  //     <Text className="mt-1 text-center text-xs text-gray-800">
   //       Durasi Pinjam: {item.loan_duration} hari
   //     </Text>
   //   </TouchableOpacity>
@@ -932,14 +954,14 @@ export default function HomeScreen({ navigation }) {
   const renderBook = ({ item }) => (
     <TouchableOpacity
       onPress={() => navigation.navigate("BookDetail", { book: item })}
-      className="bg-white rounded-xl p-3 mr-3 w-[160px] shadow-md"
+      className="mr-3 w-[160px] rounded-xl bg-white p-3 shadow-md"
     >
       <Image
         source={{ uri: item.image_url }}
-        className="w-full h-[150px] rounded-lg mb-2"
+        className="mb-2 h-[150px] w-full rounded-lg"
         resizeMode="contain"
       />
-      <View className="absolute z-10 right-3 top-3">
+      <View className="absolute right-3 top-3 z-10">
         <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
           <AntDesign
             name={favorites.includes(item.id) ? "heart" : "hearto"}
@@ -949,12 +971,12 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
       </View>
       <Text
-        className="text-lg font-bold text-center text-gray-800"
+        className="text-center text-lg font-bold text-gray-800"
         numberOfLines={1}
       >
         {item.title}
       </Text>
-      <Text className="mt-1 text-center text-gray-800 text-sb">
+      <Text className="text-sb mt-1 text-center text-gray-800">
         {item.author}
       </Text>
     </TouchableOpacity>
@@ -968,14 +990,14 @@ export default function HomeScreen({ navigation }) {
         ListHeaderComponent={
           <>
             {/* Header User */}
-            <View className="flex-row items-center px-4 py-3 bg-white">
+            <View className="flex-row items-center bg-white px-4 py-3">
               <Image
                 source={
                   profileImage
                     ? { uri: profileImage }
                     : require("../assets/profile.png")
                 }
-                className="mr-3 rounded-full w-14 h-14"
+                className="mr-3 h-14 w-14 rounded-full"
               />
               <Text className="text-2xl font-bold text-gray-800">
                 Hi, {userName}
@@ -983,19 +1005,19 @@ export default function HomeScreen({ navigation }) {
             </View>
 
             {/* Welcome Text */}
-            <Text className="px-4 mt-5 text-2xl font-bold text-gray-900">
+            <Text className="mt-5 px-4 text-2xl font-bold text-gray-900">
               Selamat Datang!
             </Text>
 
             {/* Category Section */}
-            <View className="flex-row items-center justify-between px-4 mt-6 mb-3">
+            <View className="mb-3 mt-6 flex-row items-center justify-between px-4">
               <Text className="text-xl font-bold text-gray-800">
                 Categories
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate("CategorySearch")}
               >
-                <Text className="text-blue-600 text-sb">Search Category</Text>
+                <Text className="text-sb text-blue-600">Search Category</Text>
               </TouchableOpacity>
             </View>
             <FlatList
@@ -1008,14 +1030,14 @@ export default function HomeScreen({ navigation }) {
             />
 
             {/* Book Section */}
-            <View className="flex-row items-center justify-between px-4 mt-6 mb-3">
-              <Text className="px-4 mt-6 mb-3 text-xl font-bold text-gray-800">
+            <View className="mb-3 mt-6 flex-row items-center justify-between px-4">
+              <Text className="mb-3 mt-6 px-4 text-xl font-bold text-gray-800">
                 Books
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate("BookSearch")}
               >
-                <Text className="text-blue-600 text-sb">Search Book</Text>
+                <Text className="text-sb text-blue-600">Search Book</Text>
               </TouchableOpacity>
             </View>
             <FlatList

@@ -136,7 +136,7 @@
 //         {/* Profile Image */}
 //         <Image
 //           source={require('../assets/profile.png')}
-//           className="mt-0 mb-3 border-2 border-gray-300 rounded-full w-28 h-28"
+//           className="mb-3 mt-0 h-28 w-28 rounded-full border-2 border-gray-300"
 //         />
 
 //         {/* Email */}
@@ -147,7 +147,7 @@
 //           <Text className="mb-3 text-lg font-bold text-gray-800">Settings</Text>
 
 //           <TouchableOpacity
-//             className="flex-row items-center py-3 border-b border-gray-200"
+//             className="flex-row items-center border-b border-gray-200 py-3"
 //             onPress={() => handlePress('Edit Profile')}
 //           >
 //             <Ionicons name="person-outline" size={20} color="#555" />
@@ -155,7 +155,7 @@
 //           </TouchableOpacity>
 
 //           <TouchableOpacity
-//             className="flex-row items-center py-3 border-b border-gray-200"
+//             className="flex-row items-center border-b border-gray-200 py-3"
 //             onPress={() => handlePress('Edit Password')}
 //           >
 //             <Ionicons name="lock-closed-outline" size={20} color="#555" />
@@ -163,7 +163,7 @@
 //           </TouchableOpacity>
 
 //           <TouchableOpacity
-//             className="flex-row items-center py-3 border-b border-gray-200"
+//             className="flex-row items-center border-b border-gray-200 py-3"
 //             onPress={() => handlePress('Favorite')}
 //           >
 //             <Ionicons name="heart-outline" size={20} color="#555" />
@@ -171,7 +171,7 @@
 //           </TouchableOpacity>
 
 //           <TouchableOpacity
-//             className="flex-row items-center py-3 border-b border-gray-200"
+//             className="flex-row items-center border-b border-gray-200 py-3"
 //             onPress={() => handlePress('Logout')}
 //           >
 //             <Ionicons name="log-out-outline" size={20} color="#d00" />
@@ -276,7 +276,7 @@
 //         {/* Profile Image */}
 //         <Image
 //           source={require("../assets/profile.png")}
-//           className="mt-0 mb-3 border-2 border-gray-300 rounded-full w-28 h-28"
+//           className="mb-3 mt-0 h-28 w-28 rounded-full border-2 border-gray-300"
 //         />
 
 //         {/* Email */}
@@ -287,7 +287,7 @@
 //           <Text className="mb-3 text-lg font-bold text-gray-800">Settings</Text>
 
 //           <TouchableOpacity
-//             className="flex-row items-center py-3 border-b border-gray-200"
+//             className="flex-row items-center border-b border-gray-200 py-3"
 //             onPress={() => navigation.navigate("EditProfileScreen")}
 //           >
 //             <Ionicons name="person-outline" size={20} color="#555" />
@@ -295,7 +295,7 @@
 //           </TouchableOpacity>
 
 //           <TouchableOpacity
-//             className="flex-row items-center py-3 border-b border-gray-200"
+//             className="flex-row items-center border-b border-gray-200 py-3"
 //             onPress={() => navigation.navigate("EditPasswordScreen")}
 //           >
 //             <Ionicons name="lock-closed-outline" size={20} color="#555" />
@@ -303,7 +303,7 @@
 //           </TouchableOpacity>
 
 //           <TouchableOpacity
-//             className="flex-row items-center py-3 border-b border-gray-200"
+//             className="flex-row items-center border-b border-gray-200 py-3"
 //             onPress={() => navigation.navigate("FavoriteScreen")}
 //           >
 //             <Ionicons name="heart-outline" size={20} color="#555" />
@@ -311,7 +311,7 @@
 //           </TouchableOpacity>
 
 //           <TouchableOpacity
-//             className="flex-row items-center py-3 border-b border-gray-200"
+//             className="flex-row items-center border-b border-gray-200 py-3"
 //             onPress={() => handlePress("Logout")}
 //           >
 //             <Ionicons name="log-out-outline" size={20} color="#d00" />
@@ -348,18 +348,51 @@ export default function ProfileScreen() {
   const [userEmail, setUserEmail] = useState("user@example.com");
   const [profileImage, setProfileImage] = useState(null); // URL gambar dari server
 
+  // const loadUser = async () => {
+  //   try {
+  //     const userData = await AsyncStorage.getItem("auth_user");
+  //     if (userData) {
+  //       const user = JSON.parse(userData);
+  //       setUserEmail(user.email || "guest@example.com");
+  //       if (user.profile_image) {
+  //         setProfileImage(`${BASE_URL}/storage/profile_images/${user.profile_image}`);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.error("Gagal load user:", err);
+  //   }
+  // };
+
   const loadUser = async () => {
     try {
+      const token = await AsyncStorage.getItem("auth_token");
+
+      if (!token) return;
+
+      // Fetch email dari auth_user (localStorage)
       const userData = await AsyncStorage.getItem("auth_user");
       if (userData) {
         const user = JSON.parse(userData);
         setUserEmail(user.email || "guest@example.com");
-        if (user.profile_image) {
-          setProfileImage(`${BASE_URL}/storage/profile_images/${user.profile_image}`);
-        }
+      }
+
+      // Fetch profile image via API
+      const res = await axios.get(`${BASE_URL}/api/user/profile-image`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
+
+      const image = res.data.profile_image;
+
+      if (image) {
+        setProfileImage(`${BASE_URL}/storage/profile_images/${image}`);
+      } else {
+        setProfileImage(null);
       }
     } catch (err) {
-      console.error("Gagal load user:", err);
+      console.error("Gagal load user atau gambar:", err);
     }
   };
 
@@ -372,12 +405,16 @@ export default function ProfileScreen() {
       const token = await AsyncStorage.getItem("auth_token");
       if (!token) throw new Error("Token not found");
 
-      await axios.post(`${BASE_URL}/api/logout`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
+      await axios.post(
+        `${BASE_URL}/api/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      );
 
       await logout();
       await AsyncStorage.removeItem("auth_user");
@@ -388,9 +425,13 @@ export default function ProfileScreen() {
   };
 
   const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
-      return Alert.alert("Izin ditolak", "Akses galeri dibutuhkan untuk mengunggah foto.");
+      return Alert.alert(
+        "Izin ditolak",
+        "Akses galeri dibutuhkan untuk mengunggah foto."
+      );
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -439,6 +480,7 @@ export default function ProfileScreen() {
       }
 
       Alert.alert("Berhasil", "Foto profil berhasil diperbarui.");
+      loadUser(); // fetch ulang gambar baru dari server
     } catch (err) {
       console.error("Upload error:", err);
       Alert.alert("Gagal", "Terjadi kesalahan saat mengunggah gambar.");
@@ -458,18 +500,18 @@ export default function ProfileScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView contentContainerStyle={{ alignItems: "center" }}>
         {/* Profile Image with upload button */}
-        <View className="relative mt-2 mb-3">
+        <View className="relative mb-3 mt-2">
           <Image
             source={
               profileImage
                 ? { uri: profileImage }
                 : require("../assets/profile.png")
             }
-            className="border-2 border-gray-300 rounded-full w-28 h-28"
+            className="h-28 w-28 rounded-full border-2 border-gray-300"
           />
           <TouchableOpacity
             onPress={pickImage}
-            className="absolute p-1 bg-white border border-gray-300 rounded-full bottom-1 right-1"
+            className="absolute bottom-1 right-1 rounded-full border border-gray-300 bg-white p-1"
           >
             <Ionicons name="camera" size={18} color="#333" />
           </TouchableOpacity>
@@ -483,7 +525,7 @@ export default function ProfileScreen() {
           <Text className="mb-3 text-lg font-bold text-gray-800">Settings</Text>
 
           <TouchableOpacity
-            className="flex-row items-center py-3 border-b border-gray-200"
+            className="flex-row items-center border-b border-gray-200 py-3"
             onPress={() => navigation.navigate("EditProfileScreen")}
           >
             <Ionicons name="person-outline" size={20} color="#555" />
@@ -491,7 +533,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            className="flex-row items-center py-3 border-b border-gray-200"
+            className="flex-row items-center border-b border-gray-200 py-3"
             onPress={() => navigation.navigate("EditPasswordScreen")}
           >
             <Ionicons name="lock-closed-outline" size={20} color="#555" />
@@ -499,7 +541,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            className="flex-row items-center py-3 border-b border-gray-200"
+            className="flex-row items-center border-b border-gray-200 py-3"
             onPress={() => navigation.navigate("FavoriteScreen")}
           >
             <Ionicons name="heart-outline" size={20} color="#555" />
@@ -507,7 +549,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            className="flex-row items-center py-3 border-b border-gray-200"
+            className="flex-row items-center border-b border-gray-200 py-3"
             onPress={() => handlePress("Logout")}
           >
             <Ionicons name="log-out-outline" size={20} color="#d00" />
