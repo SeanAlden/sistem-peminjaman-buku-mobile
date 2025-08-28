@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { BASE_URL } from "../api/responseUrl";
+import { BASE_URL } from "../../api/responseUrl";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function EditProfileScreen({ navigation }) {

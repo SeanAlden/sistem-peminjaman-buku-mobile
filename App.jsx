@@ -647,23 +647,26 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import HomeScreen from "./screens/HomeScreen";
-import CategoryDetailScreen from "./screens/CategoryDetailScreen";
-import BookDetailScreen from "./screens/BookDetailScreen";
-import ProfileScreen from "./screens/ProfileScreen";
-import LoanScreen from "./screens/LoanScreen";
-import NotificationScreen from "./screens/NotificationScreen";
-import CategorySearchScreen from "./screens/CategorySearchScreen";
-import BookSearchScreen from "./screens/BookSearchScreen";
-import LoginScreen from "./screens/LoginScreen";
-import RegisterScreen from "./screens/RegisterScreen";
-import FavoriteScreen from "./screens/FavoriteScreen";
+import HomeScreen from "./screens/app/HomeScreen";
+import CategoryDetailScreen from "./screens/app/CategoryDetailScreen";
+import BookDetailScreen from "./screens/app/BookDetailScreen";
+import ProfileScreen from "./screens/app/ProfileScreen";
+import LoanScreen from "./screens/app/LoanScreen";
+import CategorySearchScreen from "./screens/app/CategorySearchScreen";
+import BookSearchScreen from "./screens/app/BookSearchScreen";
+import LoginScreen from "./screens/auth/LoginScreen";
+import RegisterScreen from "./screens/auth/RegisterScreen";
+import FavoriteScreen from "./screens/app/FavoriteScreen";
 
 import { AuthContext, AuthProvider } from "./context/AuthContext"; // penting!
 
 import "./global.css";
-import EditProfileScreen from "./screens/EditProfileScreen";
-import EditPasswordScreen from "./screens/EditPasswordScreen";
+import EditProfileScreen from "./screens/app/EditProfileScreen";
+import EditPasswordScreen from "./screens/app/EditPasswordScreen";
+import ForgotPasswordScreen from "./screens/auth/ForgotPasswordScreen";
+import VerificationCodeScreen from "./screens/auth/VerificationCodeScreen";
+import ResetPasswordScreen from "./screens/auth/ResetPasswordScreen";
+import ReservationScreen from "./screens/app/ReservationScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -688,6 +691,7 @@ function HomeStack() {
       <Stack.Screen name="BookDetail" component={BookDetailScreen} />
       <Stack.Screen name="CategorySearch" component={CategorySearchScreen} />
       <Stack.Screen name="BookSearch" component={BookSearchScreen} />
+      <Stack.Screen name="Reservation Screen" component={ReservationScreen} />
     </Stack.Navigator>
   );
 }
@@ -713,6 +717,32 @@ function ProfileStack() {
   );
 }
 
+function AuthStack() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: orangeThemeColor },
+        headerTintColor: "#ffffff",
+        headerTitleAlign: "center",
+        headerTitleStyle: {
+          fontSize: 22,
+          fontWeight: "bold",
+        },
+      }}
+    >
+      <Tab.Screen name="Login" component={LoginScreen} />
+      {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
+      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen
+        name="VerificationCode"
+        component={VerificationCodeScreen}
+      />
+      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+    </Stack.Navigator>
+  );
+}
+
 // Navigator untuk bagian dalam aplikasi setelah login
 function AppTabs() {
   return (
@@ -729,8 +759,6 @@ function AppTabs() {
             iconName = focused ? "home" : "home-outline";
           else if (route.name === "Loan")
             iconName = focused ? "book" : "book-outline";
-          else if (route.name === "Notification")
-            iconName = focused ? "notifications" : "notifications-outline";
           else if (route.name === "Profile")
             iconName = focused ? "person-circle" : "person-circle-outline";
 
@@ -751,8 +779,11 @@ function AppTabs() {
         options={{ headerShown: false }}
       />
       <Tab.Screen name="Loan" component={LoanScreen} />
-      <Tab.Screen name="Notification" component={NotificationScreen} />
-      <Tab.Screen name="Profile" component={ProfileStack} options={{headerShown:false}} />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileStack}
+        options={{ headerShown: false }}
+      />
     </Tab.Navigator>
   );
 }
@@ -769,8 +800,18 @@ function RootNavigator() {
         <Stack.Screen name="AppTabs" component={AppTabs} />
       ) : (
         <>
+          {/* <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPasswordScreen}
+          />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen
+            name="VerificationCode"
+            component={VerificationCodeScreen}
+            />
+          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} /> */}
+          <Stack.Screen name="AuthStack" component={AuthStack} />
         </>
       )}
     </Stack.Navigator>
@@ -783,7 +824,7 @@ export default function App() {
     <SafeAreaProvider>
       <AuthProvider>
         {/* <NavigationContainer> */}
-        <RootNavigator />
+          <RootNavigator />
         {/* </NavigationContainer> */}
       </AuthProvider>
     </SafeAreaProvider>

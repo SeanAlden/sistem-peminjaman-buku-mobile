@@ -255,15 +255,30 @@ import {
   TouchableOpacity,
 } from "react-native";
 import axios from "axios";
-import { BASE_URL } from "../api/responseUrl";
+import { BASE_URL } from "../../api/responseUrl";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoanScreen() {
   const [loans, setLoans] = useState([]);
   const [imageError, setImageError] = useState(false);
 
+  // const fetchLoans = async () => {
+  //   try {
+  //     const res = await axios.get(`${BASE_URL}/api/loans`);
+  //     setLoans(res.data.data);
+  //   } catch (err) {
+  //     console.error("Gagal ambil data:", err);
+  //   }
+  // };
+
   const fetchLoans = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/loans`);
+      const token = await AsyncStorage.getItem("auth_token"); // ambil token dari penyimpanan
+      const res = await axios.get(`${BASE_URL}/api/loans`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setLoans(res.data.data);
     } catch (err) {
       console.error("Gagal ambil data:", err);
@@ -272,7 +287,16 @@ export default function LoanScreen() {
 
   const handleReturn = async (id) => {
     try {
-      await axios.post(`${BASE_URL}/api/loans/${id}/return`);
+      const token = await AsyncStorage.getItem("auth_token"); // ambil token dari penyimpanan
+      await axios.post(
+        `${BASE_URL}/api/loans/${id}/return`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       Alert.alert("Berhasil", "Buku berhasil dikembalikan");
       fetchLoans();
     } catch (err) {
@@ -287,7 +311,12 @@ export default function LoanScreen() {
         text: "Ya",
         onPress: async () => {
           try {
-            await axios.delete(`${BASE_URL}/api/loans/${id}`);
+            const token = await AsyncStorage.getItem("auth_token"); // ambil token dari penyimpanan
+            await axios.delete(`${BASE_URL}/api/loans/${id}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
             Alert.alert("Dibatalkan", "Peminjaman dibatalkan");
             fetchLoans();
           } catch (err) {
@@ -320,7 +349,7 @@ export default function LoanScreen() {
           source={
             (!item.book.image_url && item.book.image_url.trim() !== "") ||
             imageError
-              ? require("../assets/avatar.png") // gambar default lokal
+              ? require("../../assets/avatar.png") // gambar default lokal
               : { uri: `${BASE_URL}/storage/${item.book.image_url}` }
           }
           className="w-[90px] h-[90px] rounded-md mr-3"

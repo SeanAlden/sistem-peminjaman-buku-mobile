@@ -7,7 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { BASE_URL } from "../api/responseUrl";
+import { BASE_URL } from "../../api/responseUrl";
 import { ChevronRightIcon } from "react-native-heroicons/outline";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";

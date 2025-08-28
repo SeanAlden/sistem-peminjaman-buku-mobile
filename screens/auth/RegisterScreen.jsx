@@ -124,7 +124,7 @@ import {
   Alert,
 } from "react-native";
 import axios from "axios";
-import { BASE_URL } from "../api/responseUrl";
+import { BASE_URL } from "../../api/responseUrl";
 
 export default function RegisterScreen({ navigation }) {
   const [form, setForm] = useState({

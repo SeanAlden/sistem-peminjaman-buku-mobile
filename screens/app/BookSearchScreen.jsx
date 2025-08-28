@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { BASE_URL } from "../api/responseUrl";
+import { BASE_URL } from "../../api/responseUrl";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function BookSearchScreen({ navigation }) {
   const [books, setBooks] = useState([]);
@@ -20,7 +21,13 @@ export default function BookSearchScreen({ navigation }) {
   // Fungsi untuk fetch data buku dari API
   const fetchBooks = async () => {
     try {
-      const res = await fetch(`${BASE_URL}/api/books`);
+      const token = await AsyncStorage.getItem("auth_token");
+      const res = await fetch(`${BASE_URL}/api/books`, {
+         headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+      });
       const data = await res.json();
       if (data.success) {
         setBooks(data.data);
@@ -54,14 +61,14 @@ export default function BookSearchScreen({ navigation }) {
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate("BookDetail", { book: item })}
+      onPress={() => navigation.navigate("BookDetail", { bookId: item.id })}
       className="flex-row items-center p-3 mb-3 bg-white rounded-lg shadow"
     >
       <Image
         source={
           (!item.image_url && item.image_url.trim() !== "") || imageError
-            ? require("../assets/avatar.png") // gambar default lokal
-            : { uri: item.image_url }
+            ? require("../../assets/avatar.png") // gambar default lokal
+            : { uri: `${item.image_url}`}
         }
         className="w-16 h-20 mr-4 rounded"
         resizeMode="contain"

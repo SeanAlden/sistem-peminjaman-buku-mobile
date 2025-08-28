@@ -749,6 +749,338 @@
 // });
 
 // Kalau dengan NativeWind
+// import React, { useEffect, useState } from "react";
+// import {
+//   View,
+//   Text,
+//   Image,
+//   FlatList,
+//   SafeAreaView,
+//   TouchableOpacity,
+// } from "react-native";
+// import { BASE_URL } from "../../api/responseUrl";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
+// import { AntDesign } from "@expo/vector-icons";
+// import axios from "axios";
+
+// export default function HomeScreen({ navigation }) {
+//   const [categories, setCategories] = useState([]);
+//   const [books, setBooks] = useState([]);
+//   const [userName, setUserName] = useState("Guest");
+//   const [favorites, setFavorites] = useState([]);
+
+//   const [imageError, setImageError] = useState(false);
+//   const [profileImage, setProfileImage] = useState(null); // URL gambar dari server
+//   // const isValidUrl = item.image_url && item.image_url.trim() !== "";
+
+//   const fetchData = async () => {
+//     const token = await AsyncStorage.getItem("auth_token");
+//     try {
+//       const categoryResponse = await fetch(`${BASE_URL}/api/categories`);
+//       const bookResponse = await fetch(`${BASE_URL}/api/books`, {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           Accept: "application/json",
+//         },
+//       });
+//       const categoryData = await categoryResponse.json();
+//       const bookData = await bookResponse.json();
+
+//       if (categoryData.success) setCategories(categoryData.data);
+//       if (bookData.success) setBooks(bookData.data);
+//     } catch (error) {
+//       console.error("Fetch error:", error);
+//     }
+//   };
+
+//   const loadUser = async () => {
+//     try {
+//       const token = await AsyncStorage.getItem("auth_token");
+
+//       if (!token) return;
+//       const userData = await AsyncStorage.getItem("auth_user");
+//       if (userData) {
+//         const user = JSON.parse(userData);
+//         setUserName(user.name || "Guest");
+//         // if (user.profile_image) {
+//         //   setProfileImage(
+//         //     `${BASE_URL}/storage/profile_images/${user.profile_image}`
+//         //   );
+//         // }
+
+//         // Fetch profile image via API
+//         const res = await axios.get(`${BASE_URL}/api/user/profile-image`, {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             Accept: "application/json",
+//           },
+//         });
+
+//         const image = res.data.profile_image;
+
+//         if (image) {
+//           setProfileImage(`${BASE_URL}/storage/profile_images/${image}`);
+//         } else {
+//           setProfileImage(null);
+//         }
+//       } else {
+//         console.error("Data user tidak ditemukan");
+//       }
+//     } catch (err) {
+//       console.error("Gagal load user:", err);
+//     }
+//   };
+
+//   const toggleFavorite = async (bookId) => {
+//     const isFavorited = favorites.includes(bookId);
+//     const token = await AsyncStorage.getItem("auth_token");
+//     try {
+//       const response = await fetch(`${BASE_URL}/api/favorites`, {
+//         method: isFavorited ? "DELETE" : "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify({ book_id: bookId }),
+//       });
+//       const data = await response.json();
+//       if (data.success) {
+//         setFavorites((prev) =>
+//           isFavorited ? prev.filter((id) => id !== bookId) : [...prev, bookId]
+//         );
+//       }
+//     } catch (error) {
+//       console.error("Favorite toggle error:", error);
+//     }
+//   };
+
+//   const fetchFavorites = async () => {
+//     const token = await AsyncStorage.getItem("auth_token");
+//     const res = await fetch(`${BASE_URL}/api/favorites`, {
+//       headers: { Authorization: `Bearer ${token}` },
+//     });
+//     const data = await res.json();
+//     if (data.success) {
+//       setFavorites(data.data.map((book) => book.id));
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchData();
+//     loadUser(); // ambil user dari async storage
+//     fetchFavorites();
+
+//     const interval = setInterval(() => {
+//       fetchData(); // fetch setiap 10 detik
+//       fetchFavorites();
+//       loadUser();
+//     }, 10000); // 10000ms = 10 detik
+
+//     return () => clearInterval(interval); // bersihkan interval saat unmount
+//   }, []);
+
+//   const renderCategory = ({ item }) => (
+//     <TouchableOpacity
+//       onPress={() =>
+//         navigation.navigate("Category Detail", {
+//           categoryId: item.id,
+//           categoryName: item.name,
+//         })
+//       }
+//       className="mr-3 w-[110px] items-center rounded-xl bg-white p-3 shadow-md"
+//     >
+//       <Image
+//         source={require("../../assets/default-category.png")}
+//         className="mb-2 h-[60px] w-[60px]"
+//       />
+//       <Text className="text-sm font-semibold text-center text-gray-800">
+//         {item.name}
+//       </Text>
+//     </TouchableOpacity>
+//   );
+
+//   // const renderBook = ({ item }) => (
+//   //   <TouchableOpacity
+//   //     onPress={() => navigation.navigate("BookDetail", { book: item })}
+//   //     className="mr-3 w-[160px] rounded-xl bg-white p-3 shadow-md"
+//   //   >
+//   //     {/* <Image
+//   //       source={{ uri: item.image_url }}
+//   //       className="mb-2 h-[150px] w-full rounded-lg"
+//   //       resizeMode="contain"
+//   //     /> */}
+//   //     {/* <Image
+//   //       source={
+//   //         item.image_url
+//   //           ? { uri: item.image_url }
+//   //           : require("../assets/avatar.png") // Pastikan path sesuai struktur project Anda
+//   //       }
+//   //       className="mb-2 h-[150px] w-full rounded-lg"
+//   //       resizeMode="contain"
+//   //     /> */}
+//   //     <Image
+//   //       source={
+//   //         (!item.image_url && item.image_url.trim() !== "") || imageError
+//   //           ? require("../assets/avatar.png") // gambar default lokal
+//   //           : { uri: item.image_url }
+//   //       }
+//   //       className="mb-2 h-[150px] w-full rounded-lg"
+//   //       resizeMode="contain"
+//   //       onError={() => setImageError(true)}
+//   //     />
+//   //     <Text
+//   //       className="text-lg font-bold text-center text-gray-800"
+//   //       numberOfLines={1}
+//   //     >
+//   //       {item.title}
+//   //     </Text>
+//   //     <Text className="mt-1 text-center text-gray-800 text-sb">
+//   //       {item.author}
+//   //     </Text>
+//   //     <Text
+//   //       className="mt-1 text-xs text-center text-gray-500"
+//   //       numberOfLines={2}
+//   //       ellipsizeMode="tail"
+//   //     >
+//   //       Deskripsi: {item.description}
+//   //     </Text>
+//   //     <Text className="mt-1 text-sm text-center text-gray-800">
+//   //       Stok: {item.stock}
+//   //     </Text>
+//   //     {/* <Text className="mt-1 text-xs text-center text-gray-500">
+//   //       Durasi Pinjam: {item.description}
+//   //     </Text> */}
+
+//   //     <Text className="mt-1 text-xs text-center text-gray-800">
+//   //       Durasi Pinjam: {item.loan_duration} hari
+//   //     </Text>
+//   //   </TouchableOpacity>
+//   // );
+
+//   const renderBook = ({ item }) => (
+//     // <TouchableOpacity
+//     //   onPress={() => navigation.navigate("BookDetail", { book: item })}
+//     //   className="mr-3 w-[160px] rounded-xl bg-white p-3 shadow-md"
+//     // >
+
+//     <TouchableOpacity
+//         onPress={() => navigation.navigate("BookDetail", { bookId: item.id })} // Perubahan: Kirim bookId, bukan seluruh objek book
+//         className="mr-3 w-[160px] rounded-xl bg-white p-3 shadow-md"
+//     >
+//       {/* <Image
+//         source={{ uri: item.image_url }}
+//         className="mb-2 h-[150px] w-full rounded-lg"
+//         resizeMode="contain"
+//       /> */}
+//       <Image
+//         source={
+//           (!item.image_url && item.image_url.trim() !== "") ||
+//           imageError
+//             ? require("../../assets/avatar.png") // sesuaikan path jika berbeda
+//             // : { uri: `${BASE_URL}/storage/${item.image_url}` }
+//             : { uri: item.image_url }
+//         }
+//         className="mb-2 h-[150px] w-full rounded-lg"
+//         resizeMode="contain"
+//         // onError={() => setImageError(true)}
+//       />
+//       <View className="absolute z-10 right-3 top-3">
+//         <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
+//           <AntDesign
+//             name={favorites.includes(item.id) ? "heart" : "hearto"}
+//             size={20}
+//             color="red"
+//           />
+//         </TouchableOpacity>
+//       </View>
+//       <Text
+//         className="text-lg font-bold text-center text-gray-800"
+//         numberOfLines={1}
+//       >
+//         {item.title}
+//       </Text>
+//       <Text className="mt-1 text-center text-gray-800 text-sb">
+//         {item.author}
+//       </Text>
+//     </TouchableOpacity>
+//   );
+
+//   return (
+//     <SafeAreaView className="flex-1 bg-gray-100">
+//       <FlatList
+//         data={[]} // Kosong karena konten ada di header
+//         keyExtractor={() => "main-scroll"}
+//         ListHeaderComponent={
+//           <>
+//             {/* Header User */}
+//             <View className="flex-row items-center px-4 py-3 bg-white">
+//               <Image
+//                 source={
+//                   profileImage
+//                     ? { uri: profileImage }
+//                     : require("../../assets/profile.png")
+//                 }
+//                 className="mr-3 rounded-full h-14 w-14"
+//               />
+//               <Text className="text-2xl font-bold text-gray-800">
+//                 Hi, {userName}
+//               </Text>
+//             </View>
+
+//             {/* Welcome Text */}
+//             <Text className="px-4 mt-5 text-2xl font-bold text-gray-900">
+//               Selamat Datang!
+//             </Text>
+
+//             {/* Category Section */}
+//             <View className="flex-row items-center justify-between px-4 mt-6 mb-3">
+//               <Text className="text-xl font-bold text-gray-800">
+//                 Categories
+//               </Text>
+//               <TouchableOpacity
+//                 onPress={() => navigation.navigate("CategorySearch")}
+//               >
+//                 <Text className="text-blue-600 text-sb">Search Category</Text>
+//               </TouchableOpacity>
+//             </View>
+//             <FlatList
+//               horizontal
+//               data={categories}
+//               keyExtractor={(item) => `cat-${item.id}`}
+//               renderItem={renderCategory}
+//               showsHorizontalScrollIndicator={false}
+//               contentContainerStyle={{ paddingHorizontal: 16 }}
+//             />
+
+//             {/* Book Section */}
+//             <View className="flex-row items-center justify-between px-4 mt-6 mb-3">
+//               <Text className="px-4 mt-6 mb-3 text-xl font-bold text-gray-800">
+//                 Books
+//               </Text>
+//               <TouchableOpacity
+//                 onPress={() => navigation.navigate("BookSearch")}
+//               >
+//                 <Text className="text-blue-600 text-sb">Search Book</Text>
+//               </TouchableOpacity>
+//             </View>
+//             <FlatList
+//               horizontal
+//               data={books}
+//               keyExtractor={(item) => `book-${item.id}`}
+//               renderItem={renderBook}
+//               showsHorizontalScrollIndicator={false}
+//               contentContainerStyle={{
+//                 paddingHorizontal: 16,
+//                 paddingBottom: 20,
+//               }}
+//             />
+//           </>
+//         }
+//       />
+//     </SafeAreaView>
+//   );
+// }
+
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -758,25 +1090,77 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-import { BASE_URL } from "../api/responseUrl";
+import { BASE_URL } from "../../api/responseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
+
+// --- PERBAIKAN 1: Buat komponen terpisah untuk kartu buku ---
+// Ini memungkinkan setiap gambar mengelola status error-nya sendiri.
+const BookCard = ({ item, onNavigate, onToggleFavorite, isFavorited }) => {
+  const [hasImageError, setHasImageError] = useState(false);
+
+  // Tentukan sumber gambar berdasarkan URL dan status error
+  const imageSource = 
+    !item.image_url || hasImageError
+      ? require("../../assets/avatar.png") // Gambar lokal jika URL tidak ada atau error
+      : { uri: item.image_url };
+
+  return (
+    <TouchableOpacity
+      onPress={() => onNavigate(item.id)}
+      className="mr-3 w-[160px] rounded-xl bg-white p-3 shadow-md"
+    >
+      <Image
+        source={imageSource}
+        className="mb-2 h-[150px] w-full rounded-lg bg-gray-200" // Tambahkan bg-gray-200
+        resizeMode="contain"
+        onError={() => setHasImageError(true)} // Aktifkan onError
+      />
+      <View className="absolute z-10 right-3 top-3">
+        <TouchableOpacity onPress={() => onToggleFavorite(item.id)}>
+          <AntDesign
+            name={isFavorited ? "heart" : "hearto"}
+            size={20}
+            color="red"
+          />
+        </TouchableOpacity>
+      </View>
+      <Text
+        className="text-lg font-bold text-center text-gray-800"
+        numberOfLines={1}
+      >
+        {item.title}
+      </Text>
+      <Text className="mt-1 text-center text-gray-800 text-sb">
+        {item.author}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
 
 export default function HomeScreen({ navigation }) {
   const [categories, setCategories] = useState([]);
   const [books, setBooks] = useState([]);
   const [userName, setUserName] = useState("Guest");
   const [favorites, setFavorites] = useState([]);
+  const [profileImage, setProfileImage] = useState(null);
 
-  const [imageError, setImageError] = useState(false);
-  const [profileImage, setProfileImage] = useState(null); // URL gambar dari server
-  // const isValidUrl = item.image_url && item.image_url.trim() !== "";
+  // --- Hapus state imageError yang lama karena sudah ditangani di BookCard ---
+  // const [imageError, setImageError] = useState(false);
 
+  // ... (Fungsi fetchData, loadUser, toggleFavorite, fetchFavorites tidak berubah) ...
   const fetchData = async () => {
+    const token = await AsyncStorage.getItem("auth_token");
     try {
       const categoryResponse = await fetch(`${BASE_URL}/api/categories`);
-      const bookResponse = await fetch(`${BASE_URL}/api/books`);
+      const bookResponse = await fetch(`${BASE_URL}/api/books`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
       const categoryData = await categoryResponse.json();
       const bookData = await bookResponse.json();
 
@@ -796,22 +1180,13 @@ export default function HomeScreen({ navigation }) {
       if (userData) {
         const user = JSON.parse(userData);
         setUserName(user.name || "Guest");
-        // if (user.profile_image) {
-        //   setProfileImage(
-        //     `${BASE_URL}/storage/profile_images/${user.profile_image}`
-        //   );
-        // }
-        
-        // Fetch profile image via API
         const res = await axios.get(`${BASE_URL}/api/user/profile-image`, {
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",
           },
         });
-
         const image = res.data.profile_image;
-
         if (image) {
           setProfileImage(`${BASE_URL}/storage/profile_images/${image}`);
         } else {
@@ -858,20 +1233,16 @@ export default function HomeScreen({ navigation }) {
       setFavorites(data.data.map((book) => book.id));
     }
   };
-
+  
   useEffect(() => {
-    fetchData();
-    loadUser(); // ambil user dari async storage
-    fetchFavorites();
-
-    const interval = setInterval(() => {
-      fetchData(); // fetch setiap 10 detik
-      fetchFavorites();
-      loadUser();
-    }, 10000); // 10000ms = 10 detik
-
-    return () => clearInterval(interval); // bersihkan interval saat unmount
-  }, []);
+    const focusListener = navigation.addListener('focus', () => {
+        fetchData();
+        loadUser();
+        fetchFavorites();
+    });
+    
+    return focusListener;
+  }, [navigation]);
 
   const renderCategory = ({ item }) => (
     <TouchableOpacity
@@ -884,100 +1255,11 @@ export default function HomeScreen({ navigation }) {
       className="mr-3 w-[110px] items-center rounded-xl bg-white p-3 shadow-md"
     >
       <Image
-        source={require("../assets/default-category.png")}
+        source={require("../../assets/default-category.png")}
         className="mb-2 h-[60px] w-[60px]"
       />
-      <Text className="text-center text-sm font-semibold text-gray-800">
+      <Text className="text-sm font-semibold text-center text-gray-800">
         {item.name}
-      </Text>
-    </TouchableOpacity>
-  );
-
-  // const renderBook = ({ item }) => (
-  //   <TouchableOpacity
-  //     onPress={() => navigation.navigate("BookDetail", { book: item })}
-  //     className="mr-3 w-[160px] rounded-xl bg-white p-3 shadow-md"
-  //   >
-  //     {/* <Image
-  //       source={{ uri: item.image_url }}
-  //       className="mb-2 h-[150px] w-full rounded-lg"
-  //       resizeMode="contain"
-  //     /> */}
-  //     {/* <Image
-  //       source={
-  //         item.image_url
-  //           ? { uri: item.image_url }
-  //           : require("../assets/avatar.png") // Pastikan path sesuai struktur project Anda
-  //       }
-  //       className="mb-2 h-[150px] w-full rounded-lg"
-  //       resizeMode="contain"
-  //     /> */}
-  //     <Image
-  //       source={
-  //         (!item.image_url && item.image_url.trim() !== "") || imageError
-  //           ? require("../assets/avatar.png") // gambar default lokal
-  //           : { uri: item.image_url }
-  //       }
-  //       className="mb-2 h-[150px] w-full rounded-lg"
-  //       resizeMode="contain"
-  //       onError={() => setImageError(true)}
-  //     />
-  //     <Text
-  //       className="text-center text-lg font-bold text-gray-800"
-  //       numberOfLines={1}
-  //     >
-  //       {item.title}
-  //     </Text>
-  //     <Text className="text-sb mt-1 text-center text-gray-800">
-  //       {item.author}
-  //     </Text>
-  //     <Text
-  //       className="mt-1 text-center text-xs text-gray-500"
-  //       numberOfLines={2}
-  //       ellipsizeMode="tail"
-  //     >
-  //       Deskripsi: {item.description}
-  //     </Text>
-  //     <Text className="mt-1 text-center text-sm text-gray-800">
-  //       Stok: {item.stock}
-  //     </Text>
-  //     {/* <Text className="mt-1 text-center text-xs text-gray-500">
-  //       Durasi Pinjam: {item.description}
-  //     </Text> */}
-
-  //     <Text className="mt-1 text-center text-xs text-gray-800">
-  //       Durasi Pinjam: {item.loan_duration} hari
-  //     </Text>
-  //   </TouchableOpacity>
-  // );
-
-  const renderBook = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => navigation.navigate("BookDetail", { book: item })}
-      className="mr-3 w-[160px] rounded-xl bg-white p-3 shadow-md"
-    >
-      <Image
-        source={{ uri: item.image_url }}
-        className="mb-2 h-[150px] w-full rounded-lg"
-        resizeMode="contain"
-      />
-      <View className="absolute right-3 top-3 z-10">
-        <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
-          <AntDesign
-            name={favorites.includes(item.id) ? "heart" : "hearto"}
-            size={20}
-            color="red"
-          />
-        </TouchableOpacity>
-      </View>
-      <Text
-        className="text-center text-lg font-bold text-gray-800"
-        numberOfLines={1}
-      >
-        {item.title}
-      </Text>
-      <Text className="text-sb mt-1 text-center text-gray-800">
-        {item.author}
       </Text>
     </TouchableOpacity>
   );
@@ -985,19 +1267,19 @@ export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <FlatList
-        data={[]} // Kosong karena konten ada di header
+        data={[]}
         keyExtractor={() => "main-scroll"}
         ListHeaderComponent={
           <>
             {/* Header User */}
-            <View className="flex-row items-center bg-white px-4 py-3">
+            <View className="flex-row items-center px-4 py-3 bg-white">
               <Image
                 source={
                   profileImage
                     ? { uri: profileImage }
-                    : require("../assets/profile.png")
+                    : require("../../assets/profile.png")
                 }
-                className="mr-3 h-14 w-14 rounded-full"
+                className="mr-3 rounded-full h-14 w-14"
               />
               <Text className="text-2xl font-bold text-gray-800">
                 Hi, {userName}
@@ -1005,19 +1287,19 @@ export default function HomeScreen({ navigation }) {
             </View>
 
             {/* Welcome Text */}
-            <Text className="mt-5 px-4 text-2xl font-bold text-gray-900">
+            <Text className="px-4 mt-5 text-2xl font-bold text-gray-900">
               Selamat Datang!
             </Text>
 
             {/* Category Section */}
-            <View className="mb-3 mt-6 flex-row items-center justify-between px-4">
+            <View className="flex-row items-center justify-between px-4 mt-6 mb-3">
               <Text className="text-xl font-bold text-gray-800">
                 Categories
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate("CategorySearch")}
               >
-                <Text className="text-sb text-blue-600">Search Category</Text>
+                <Text className="text-blue-600 text-sb">Search Category</Text>
               </TouchableOpacity>
             </View>
             <FlatList
@@ -1030,21 +1312,29 @@ export default function HomeScreen({ navigation }) {
             />
 
             {/* Book Section */}
-            <View className="mb-3 mt-6 flex-row items-center justify-between px-4">
-              <Text className="mb-3 mt-6 px-4 text-xl font-bold text-gray-800">
+            <View className="flex-row items-center justify-between px-4 mt-6 mb-3">
+              <Text className="px-4 mt-6 mb-3 text-xl font-bold text-gray-800">
                 Books
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate("BookSearch")}
               >
-                <Text className="text-sb text-blue-600">Search Book</Text>
+                <Text className="text-blue-600 text-sb">Search Book</Text>
               </TouchableOpacity>
             </View>
             <FlatList
               horizontal
               data={books}
               keyExtractor={(item) => `book-${item.id}`}
-              renderItem={renderBook}
+              // --- PERBAIKAN 2: Gunakan komponen BookCard ---
+              renderItem={({ item }) => (
+                <BookCard
+                  item={item}
+                  onNavigate={(bookId) => navigation.navigate("BookDetail", { bookId })}
+                  onToggleFavorite={toggleFavorite}
+                  isFavorited={favorites.includes(item.id)}
+                />
+              )}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{
                 paddingHorizontal: 16,
@@ -1057,3 +1347,4 @@ export default function HomeScreen({ navigation }) {
     </SafeAreaView>
   );
 }
+

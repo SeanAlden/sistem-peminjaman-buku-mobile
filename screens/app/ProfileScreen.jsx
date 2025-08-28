@@ -136,7 +136,7 @@
 //         {/* Profile Image */}
 //         <Image
 //           source={require('../assets/profile.png')}
-//           className="mb-3 mt-0 h-28 w-28 rounded-full border-2 border-gray-300"
+//           className="mt-0 mb-3 border-2 border-gray-300 rounded-full h-28 w-28"
 //         />
 
 //         {/* Email */}
@@ -147,7 +147,7 @@
 //           <Text className="mb-3 text-lg font-bold text-gray-800">Settings</Text>
 
 //           <TouchableOpacity
-//             className="flex-row items-center border-b border-gray-200 py-3"
+//             className="flex-row items-center py-3 border-b border-gray-200"
 //             onPress={() => handlePress('Edit Profile')}
 //           >
 //             <Ionicons name="person-outline" size={20} color="#555" />
@@ -155,7 +155,7 @@
 //           </TouchableOpacity>
 
 //           <TouchableOpacity
-//             className="flex-row items-center border-b border-gray-200 py-3"
+//             className="flex-row items-center py-3 border-b border-gray-200"
 //             onPress={() => handlePress('Edit Password')}
 //           >
 //             <Ionicons name="lock-closed-outline" size={20} color="#555" />
@@ -163,7 +163,7 @@
 //           </TouchableOpacity>
 
 //           <TouchableOpacity
-//             className="flex-row items-center border-b border-gray-200 py-3"
+//             className="flex-row items-center py-3 border-b border-gray-200"
 //             onPress={() => handlePress('Favorite')}
 //           >
 //             <Ionicons name="heart-outline" size={20} color="#555" />
@@ -171,7 +171,7 @@
 //           </TouchableOpacity>
 
 //           <TouchableOpacity
-//             className="flex-row items-center border-b border-gray-200 py-3"
+//             className="flex-row items-center py-3 border-b border-gray-200"
 //             onPress={() => handlePress('Logout')}
 //           >
 //             <Ionicons name="log-out-outline" size={20} color="#d00" />
@@ -276,7 +276,7 @@
 //         {/* Profile Image */}
 //         <Image
 //           source={require("../assets/profile.png")}
-//           className="mb-3 mt-0 h-28 w-28 rounded-full border-2 border-gray-300"
+//           className="mt-0 mb-3 border-2 border-gray-300 rounded-full h-28 w-28"
 //         />
 
 //         {/* Email */}
@@ -287,7 +287,7 @@
 //           <Text className="mb-3 text-lg font-bold text-gray-800">Settings</Text>
 
 //           <TouchableOpacity
-//             className="flex-row items-center border-b border-gray-200 py-3"
+//             className="flex-row items-center py-3 border-b border-gray-200"
 //             onPress={() => navigation.navigate("EditProfileScreen")}
 //           >
 //             <Ionicons name="person-outline" size={20} color="#555" />
@@ -295,7 +295,7 @@
 //           </TouchableOpacity>
 
 //           <TouchableOpacity
-//             className="flex-row items-center border-b border-gray-200 py-3"
+//             className="flex-row items-center py-3 border-b border-gray-200"
 //             onPress={() => navigation.navigate("EditPasswordScreen")}
 //           >
 //             <Ionicons name="lock-closed-outline" size={20} color="#555" />
@@ -303,7 +303,7 @@
 //           </TouchableOpacity>
 
 //           <TouchableOpacity
-//             className="flex-row items-center border-b border-gray-200 py-3"
+//             className="flex-row items-center py-3 border-b border-gray-200"
 //             onPress={() => navigation.navigate("FavoriteScreen")}
 //           >
 //             <Ionicons name="heart-outline" size={20} color="#555" />
@@ -311,7 +311,7 @@
 //           </TouchableOpacity>
 
 //           <TouchableOpacity
-//             className="flex-row items-center border-b border-gray-200 py-3"
+//             className="flex-row items-center py-3 border-b border-gray-200"
 //             onPress={() => handlePress("Logout")}
 //           >
 //             <Ionicons name="log-out-outline" size={20} color="#d00" />
@@ -336,11 +336,11 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { BASE_URL } from "../api/responseUrl";
+import { BASE_URL } from "../../api/responseUrl";
 
 export default function ProfileScreen() {
   const { logout } = useContext(AuthContext);
@@ -500,18 +500,18 @@ export default function ProfileScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView contentContainerStyle={{ alignItems: "center" }}>
         {/* Profile Image with upload button */}
-        <View className="relative mb-3 mt-2">
+        <View className="relative mt-2 mb-3">
           <Image
             source={
               profileImage
                 ? { uri: profileImage }
-                : require("../assets/profile.png")
+                : require("../../assets/profile.png")
             }
-            className="h-28 w-28 rounded-full border-2 border-gray-300"
+            className="border-2 border-gray-300 rounded-full h-28 w-28"
           />
           <TouchableOpacity
             onPress={pickImage}
-            className="absolute bottom-1 right-1 rounded-full border border-gray-300 bg-white p-1"
+            className="absolute p-1 bg-white border border-gray-300 rounded-full bottom-1 right-1"
           >
             <Ionicons name="camera" size={18} color="#333" />
           </TouchableOpacity>
@@ -525,7 +525,7 @@ export default function ProfileScreen() {
           <Text className="mb-3 text-lg font-bold text-gray-800">Settings</Text>
 
           <TouchableOpacity
-            className="flex-row items-center border-b border-gray-200 py-3"
+            className="flex-row items-center py-3 border-b border-gray-200"
             onPress={() => navigation.navigate("EditProfileScreen")}
           >
             <Ionicons name="person-outline" size={20} color="#555" />
@@ -533,7 +533,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            className="flex-row items-center border-b border-gray-200 py-3"
+            className="flex-row items-center py-3 border-b border-gray-200"
             onPress={() => navigation.navigate("EditPasswordScreen")}
           >
             <Ionicons name="lock-closed-outline" size={20} color="#555" />
@@ -541,7 +541,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            className="flex-row items-center border-b border-gray-200 py-3"
+            className="flex-row items-center py-3 border-b border-gray-200"
             onPress={() => navigation.navigate("FavoriteScreen")}
           >
             <Ionicons name="heart-outline" size={20} color="#555" />
@@ -549,7 +549,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            className="flex-row items-center border-b border-gray-200 py-3"
+            className="flex-row items-center py-3 border-b border-gray-200"
             onPress={() => handlePress("Logout")}
           >
             <Ionicons name="log-out-outline" size={20} color="#d00" />

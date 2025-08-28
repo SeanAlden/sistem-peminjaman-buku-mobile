@@ -120,11 +120,11 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Alert,
-} from "react-native";
+} from "react-native";  
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL } from "../api/responseUrl";
-import { AuthContext } from "../context/AuthContext";
+import { BASE_URL } from "../../api/responseUrl";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -195,6 +195,12 @@ export default function LoginScreen({ navigation }) {
             onChangeText={setPassword}
           />
           <Button title="Login" onPress={handleLogin} />
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ForgotPassword")}
+          >
+            <Text style={styles.link}>Lupa Password?</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity onPress={() => navigation.navigate("Register")}>
             <Text style={styles.link}>Belum punya akun? Daftar di sini</Text>
           </TouchableOpacity>

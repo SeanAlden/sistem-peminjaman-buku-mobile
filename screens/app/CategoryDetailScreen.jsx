@@ -501,7 +501,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
-import { BASE_URL } from "../api/responseUrl";
+import { BASE_URL } from "../../api/responseUrl";
 
 const BookCard = ({ item, onPress }) => {
   const imageUrl = `${BASE_URL}/storage/${item.image_url}`;
@@ -515,7 +515,7 @@ const BookCard = ({ item, onPress }) => {
       <Image
         source={
           !imageUrl || imageError
-            ? require("../assets/avatar.png") // gambar default lokal
+            ? require("../../assets/avatar.png") // gambar default lokal
             : { uri: imageUrl }
         }
         className="w-full h-[150px] rounded-md mb-3 bg-gray-300"
@@ -591,7 +591,7 @@ export default function CategoryDetailScreen({ route, navigation }) {
           renderItem={({ item }) => (
             <BookCard
               item={item}
-              onPress={() => navigation.navigate("BookDetail", { book: item })}
+              onPress={() => navigation.navigate("BookDetail", { bookId: item.id })}
               // onPress={() => navigation.navigate("BookDetail", { bookId: item.id })}
             />
           )}

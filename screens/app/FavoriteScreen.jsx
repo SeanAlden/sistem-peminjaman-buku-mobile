@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL } from "../api/responseUrl";
+import { BASE_URL } from "../../api/responseUrl";
 // Anda mungkin memerlukan ikon, contoh menggunakan 'Feather' dari 'react-native-vector-icons'
 // import Icon from 'react-native-vector-icons/Feather';
 
