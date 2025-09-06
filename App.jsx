@@ -640,7 +640,451 @@
 //   );
 // }
 
-import React, { useContext } from "react";
+// import React, { useContext } from "react";
+// import { NavigationContainer } from "@react-navigation/native";
+// import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+// import { createStackNavigator } from "@react-navigation/stack";
+// import Icon from "react-native-vector-icons/Ionicons";
+// import { SafeAreaProvider } from "react-native-safe-area-context";
+
+// import HomeScreen from "./screens/app/HomeScreen";
+// import CategoryDetailScreen from "./screens/app/CategoryDetailScreen";
+// import BookDetailScreen from "./screens/app/BookDetailScreen";
+// import ProfileScreen from "./screens/app/ProfileScreen";
+// import LoanScreen from "./screens/app/LoanScreen";
+// import CategorySearchScreen from "./screens/app/CategorySearchScreen";
+// import BookSearchScreen from "./screens/app/BookSearchScreen";
+// import LoginScreen from "./screens/auth/LoginScreen";
+// import RegisterScreen from "./screens/auth/RegisterScreen";
+// import FavoriteScreen from "./screens/app/FavoriteScreen";
+
+// import { AuthContext, AuthProvider } from "./context/AuthContext"; // penting!
+
+// import "./global.css";
+// import EditProfileScreen from "./screens/app/EditProfileScreen";
+// import EditPasswordScreen from "./screens/app/EditPasswordScreen";
+// import ForgotPasswordScreen from "./screens/auth/ForgotPasswordScreen";
+// import VerificationCodeScreen from "./screens/auth/VerificationCodeScreen";
+// import ResetPasswordScreen from "./screens/auth/ResetPasswordScreen";
+// import ReservationScreen from "./screens/app/ReservationScreen";
+// import ChatScreen from "./screens/app/ChatScreen";
+
+// const Tab = createBottomTabNavigator();
+// const Stack = createStackNavigator();
+// const orangeThemeColor = "#f4511e";
+
+// // Stack untuk tab Home
+// function HomeStack() {
+//   return (
+//     <Stack.Navigator
+//       screenOptions={{
+//         headerStyle: { backgroundColor: orangeThemeColor },
+//         headerTintColor: "#ffffff",
+//         headerTitleAlign: "center",
+//         headerTitleStyle: {
+//           fontSize: 22,
+//           fontWeight: "bold",
+//         },
+//       }}
+//     >
+//       <Stack.Screen name="Home" component={HomeScreen} />
+//       <Stack.Screen name="Category Detail" component={CategoryDetailScreen} />
+//       <Stack.Screen name="BookDetail" component={BookDetailScreen} />
+//       <Stack.Screen name="CategorySearch" component={CategorySearchScreen} />
+//       <Stack.Screen name="BookSearch" component={BookSearchScreen} />
+//       <Stack.Screen name="Reservation Screen" component={ReservationScreen} />
+
+//       {/* ✅ route Chat dengan param */}
+//       <Stack.Screen name="ChatScreen" component={ChatScreen} />
+//     </Stack.Navigator>
+//   );
+// }
+
+// function ProfileStack() {
+//   return (
+//     <Stack.Navigator
+//       screenOptions={{
+//         headerStyle: { backgroundColor: orangeThemeColor },
+//         headerTintColor: "#ffffff",
+//         headerTitleAlign: "center",
+//         headerTitleStyle: {
+//           fontSize: 22,
+//           fontWeight: "bold",
+//         },
+//       }}
+//     >
+//       <Tab.Screen name="Profile" component={ProfileScreen} />
+//       <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
+//       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+//       <Stack.Screen name="EditPasswordScreen" component={EditPasswordScreen} />
+//     </Stack.Navigator>
+//   );
+// }
+
+// function AuthStack() {
+//   return (
+//     <Stack.Navigator
+//       screenOptions={{
+//         headerStyle: { backgroundColor: orangeThemeColor },
+//         headerTintColor: "#ffffff",
+//         headerTitleAlign: "center",
+//         headerTitleStyle: {
+//           fontSize: 22,
+//           fontWeight: "bold",
+//         },
+//       }}
+//     >
+//       <Tab.Screen name="Login" component={LoginScreen} />
+//       {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
+//       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+//       <Stack.Screen name="Register" component={RegisterScreen} />
+//       <Stack.Screen
+//         name="VerificationCode"
+//         component={VerificationCodeScreen}
+//       />
+//       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+//     </Stack.Navigator>
+//   );
+// }
+
+// // Navigator untuk bagian dalam aplikasi setelah login
+// function AppTabs() {
+//   return (
+//     <Tab.Navigator
+//       initialRouteName="HomeScreen"
+//       screenOptions={({ route }) => ({
+//         headerStyle: { backgroundColor: orangeThemeColor },
+//         headerTintColor: "#ffffff",
+//         headerTitleAlign: "center",
+//         headerTitleStyle: { fontSize: 22, fontWeight: "bold" },
+//         tabBarIcon: ({ focused, color, size }) => {
+//           let iconName;
+//           if (route.name === "HomeScreen")
+//             iconName = focused ? "home" : "home-outline";
+//           else if (route.name === "Loan")
+//             iconName = focused ? "book" : "book-outline";
+//           else if (route.name === "Profile")
+//             iconName = focused ? "person-circle" : "person-circle-outline";
+
+//           return <Icon name={iconName} size={size} color={color} />;
+//         },
+//         tabBarActiveTintColor: "#ffffff",
+//         tabBarInactiveTintColor: "#ffc9b5",
+//         tabBarStyle: {
+//           paddingTop: 5,
+//           backgroundColor: orangeThemeColor,
+//           borderTopWidth: 0,
+//         },
+//       })}
+//     >
+//       <Tab.Screen
+//         name="HomeScreen"
+//         component={HomeStack}
+//         options={{ headerShown: false }}
+//       />
+//       <Tab.Screen name="Loan" component={LoanScreen} />
+//       <Tab.Screen name="Chat" component={ChatScreen} />
+//       <Tab.Screen
+//         name="Profile"
+//         component={ProfileStack}
+//         options={{ headerShown: false }}
+//       />
+//     </Tab.Navigator>
+//   );
+// }
+
+// // 🔐 Root Navigator yang menentukan apakah user sudah login atau belum
+// function RootNavigator() {
+//   const { isAuthenticated, loading } = useContext(AuthContext);
+
+//   if (loading) return null; // loading splash bisa ditambahkan di sini
+
+//   return (
+//     <Stack.Navigator screenOptions={{ headerShown: false }}>
+//       {isAuthenticated ? (
+//         <Stack.Screen name="AppTabs" component={AppTabs} />
+//       ) : (
+//         <>
+//           {/* <Stack.Screen
+//             name="ForgotPassword"
+//             component={ForgotPasswordScreen}
+//           />
+//           <Stack.Screen name="Login" component={LoginScreen} />
+//           <Stack.Screen name="Register" component={RegisterScreen} />
+//           <Stack.Screen
+//             name="VerificationCode"
+//             component={VerificationCodeScreen}
+//             />
+//           <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} /> */}
+//           <Stack.Screen name="AuthStack" component={AuthStack} />
+//         </>
+//       )}
+//     </Stack.Navigator>
+//   );
+// }
+
+// // Final App
+// export default function App() {
+//   return (
+//     <SafeAreaProvider>
+//       <AuthProvider>
+//         {/* <NavigationContainer> */}
+//           <RootNavigator />
+//         {/* </NavigationContainer> */}
+//       </AuthProvider>
+//     </SafeAreaProvider>
+//   );
+// }
+
+// App.js (modified)
+// import React, { useContext, useEffect } from "react";
+// import { View, Text } from "react-native";
+// import { NavigationContainer } from "@react-navigation/native";
+// import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+// import { createStackNavigator } from "@react-navigation/stack";
+// import Icon from "react-native-vector-icons/Ionicons";
+// import { SafeAreaProvider } from "react-native-safe-area-context";
+
+// import HomeScreen from "./screens/app/HomeScreen";
+// import CategoryDetailScreen from "./screens/app/CategoryDetailScreen";
+// import BookDetailScreen from "./screens/app/BookDetailScreen";
+// import ProfileScreen from "./screens/app/ProfileScreen";
+// import LoanScreen from "./screens/app/LoanScreen";
+// import CategorySearchScreen from "./screens/app/CategorySearchScreen";
+// import BookSearchScreen from "./screens/app/BookSearchScreen";
+// import LoginScreen from "./screens/auth/LoginScreen";
+// import RegisterScreen from "./screens/auth/RegisterScreen";
+// import FavoriteScreen from "./screens/app/FavoriteScreen";
+
+// import { AuthContext, AuthProvider } from "./context/AuthContext"; // penting!
+
+// import "./global.css";
+// import EditProfileScreen from "./screens/app/EditProfileScreen";
+// import EditPasswordScreen from "./screens/app/EditPasswordScreen";
+// import ForgotPasswordScreen from "./screens/auth/ForgotPasswordScreen";
+// import VerificationCodeScreen from "./screens/auth/VerificationCodeScreen";
+// import ResetPasswordScreen from "./screens/auth/ResetPasswordScreen";
+// import ReservationScreen from "./screens/app/ReservationScreen";
+// import ChatScreen from "./screens/app/ChatScreen";
+
+// const Tab = createBottomTabNavigator();
+// const Stack = createStackNavigator();
+// const orangeThemeColor = "#f4511e";
+
+// /**
+//  * Simple ChatListScreen:
+//  * - Uses AuthContext to get current user
+//  * - Immediately navigates to ChatScreen with params (userId, adminName)
+//  * - This makes the Chat tab open the user's chat directly.
+//  *
+//  * You can extend this screen to show conversation list instead.
+//  */
+// function ChatListScreen({ navigation }) {
+//   const { user } = useContext(AuthContext);
+
+//   useEffect(() => {
+//     // if user available, open chat screen with their id
+//     if (user && user.id) {
+//       // replace so back goes to previous tab stack (optional)
+//       navigation.replace("ChatScreen", {
+//         userId: user.id,
+//         adminName: "Admin",
+//       });
+//     }
+//   }, [user, navigation]);
+
+//   return (
+//     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+//       <Text>Opening chat...</Text>
+//     </View>
+//   );
+// }
+
+// /* Home stack (keperluan fitur di dalam tab Home) */
+// function HomeStack() {
+//   return (
+//     <Stack.Navigator
+//       screenOptions={{
+//         headerStyle: { backgroundColor: orangeThemeColor },
+//         headerTintColor: "#ffffff",
+//         headerTitleAlign: "center",
+//         headerTitleStyle: {
+//           fontSize: 22,
+//           fontWeight: "bold",
+//         },
+//       }}
+//     >
+//       <Stack.Screen name="Home" component={HomeScreen} />
+//       <Stack.Screen name="Category Detail" component={CategoryDetailScreen} />
+//       <Stack.Screen name="BookDetail" component={BookDetailScreen} />
+//       <Stack.Screen name="CategorySearch" component={CategorySearchScreen} />
+//       <Stack.Screen name="BookSearch" component={BookSearchScreen} />
+//       <Stack.Screen name="Reservation Screen" component={ReservationScreen} />
+
+//       {/* Keep ChatScreen available in this stack too, so you can navigate to it from HomeStack screens */}
+//       <Stack.Screen name="ChatScreen" component={ChatScreen} />
+//     </Stack.Navigator>
+//   );
+// }
+
+// /* Profile stack: use Stack.Screen (was incorrectly Tab.Screen before) */
+// function ProfileStack() {
+//   return (
+//     <Stack.Navigator
+//       screenOptions={{
+//         headerStyle: { backgroundColor: orangeThemeColor },
+//         headerTintColor: "#ffffff",
+//         headerTitleAlign: "center",
+//         headerTitleStyle: {
+//           fontSize: 22,
+//           fontWeight: "bold",
+//         },
+//       }}
+//     >
+//       <Stack.Screen name="Profile" component={ProfileScreen} />
+//       <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
+//       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+//       <Stack.Screen name="EditPasswordScreen" component={EditPasswordScreen} />
+//     </Stack.Navigator>
+//   );
+// }
+
+// /* Auth stack: use Stack.Screen */
+// function AuthStack() {
+//   return (
+//     <Stack.Navigator
+//       screenOptions={{
+//         headerStyle: { backgroundColor: orangeThemeColor },
+//         headerTintColor: "#ffffff",
+//         headerTitleAlign: "center",
+//         headerTitleStyle: {
+//           fontSize: 22,
+//           fontWeight: "bold",
+//         },
+//       }}
+//     >
+//       <Stack.Screen name="Login" component={LoginScreen} />
+//       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+//       <Stack.Screen name="Register" component={RegisterScreen} />
+//       <Stack.Screen
+//         name="VerificationCode"
+//         component={VerificationCodeScreen}
+//       />
+//       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+//     </Stack.Navigator>
+//   );
+// }
+
+// /* Chat Stack: Chats list + Chat screen */
+// function ChatStack() {
+//   return (
+//     <Stack.Navigator
+//       screenOptions={{
+//         headerStyle: { backgroundColor: orangeThemeColor },
+//         headerTintColor: "#ffffff",
+//         headerTitleAlign: "center",
+//         headerTitleStyle: {
+//           fontSize: 22,
+//           fontWeight: "bold",
+//         },
+//       }}
+//     >
+//       <Stack.Screen
+//         name="Chats"
+//         component={ChatListScreen}
+//         options={{ title: "Chats" }}
+//       />
+//       <Stack.Screen
+//         name="ChatScreen"
+//         component={ChatScreen}
+//         options={{ title: "Chat" }}
+//       />
+//     </Stack.Navigator>
+//   );
+// }
+
+// /* App tabs - Chat tab now uses ChatStack so it's safe in bottom nav */
+// function AppTabs() {
+//   return (
+//     <Tab.Navigator
+//       initialRouteName="HomeScreen"
+//       screenOptions={({ route }) => ({
+//         headerStyle: { backgroundColor: orangeThemeColor },
+//         headerTintColor: "#ffffff",
+//         headerTitleAlign: "center",
+//         headerTitleStyle: { fontSize: 22, fontWeight: "bold" },
+//         tabBarIcon: ({ focused, color, size }) => {
+//           let iconName;
+//           if (route.name === "HomeScreen") iconName = focused ? "home" : "home-outline";
+//           else if (route.name === "Loan") iconName = focused ? "book" : "book-outline";
+//           else if (route.name === "Chat") iconName = focused ? "chatbubbles" : "chatbubbles-outline";
+//           else if (route.name === "Profile") iconName = focused ? "person-circle" : "person-circle-outline";
+
+//           return <Icon name={iconName} size={size} color={color} />;
+//         },
+//         tabBarActiveTintColor: "#ffffff",
+//         tabBarInactiveTintColor: "#ffc9b5",
+//         tabBarStyle: {
+//           paddingTop: 5,
+//           backgroundColor: orangeThemeColor,
+//           borderTopWidth: 0,
+//         },
+//       })}
+//     >
+//       <Tab.Screen
+//         name="HomeScreen"
+//         component={HomeStack}
+//         options={{ headerShown: false, title: "Home" }}
+//       />
+//       <Tab.Screen name="Loan" component={LoanScreen} options={{ title: "Loan" }} />
+//       {/* Chat tab: uses ChatStack */}
+//       <Tab.Screen
+//         name="Chat"
+//         component={ChatStack}
+//         options={{ headerShown: false, title: "Chat" }}
+//       />
+//       <Tab.Screen
+//         name="Profile"
+//         component={ProfileStack}
+//         options={{ headerShown: false, title: "Profile" }}
+//       />
+//     </Tab.Navigator>
+//   );
+// }
+
+// /* Root Navigator (decides auth) */
+// function RootNavigator() {
+//   const { isAuthenticated, loading } = useContext(AuthContext);
+
+//   if (loading) return null; // you can return a splash/loading screen here
+
+//   return (
+//     <Stack.Navigator screenOptions={{ headerShown: false }}>
+//       {isAuthenticated ? (
+//         <Stack.Screen name="AppTabs" component={AppTabs} />
+//       ) : (
+//         <Stack.Screen name="AuthStack" component={AuthStack} />
+//       )}
+//     </Stack.Navigator>
+//   );
+// }
+
+// /* Final App */
+// export default function App() {
+//   return (
+//     <SafeAreaProvider>
+//       <AuthProvider>
+//         {/* <NavigationContainer> */}
+//           <RootNavigator />
+//         {/* </NavigationContainer> */}
+//       </AuthProvider>
+//     </SafeAreaProvider>
+//   );
+// }
+
+// App.jsx
+import React, { useContext, useEffect } from "react";
+import { View, Text, ActivityIndicator } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -658,7 +1102,7 @@ import LoginScreen from "./screens/auth/LoginScreen";
 import RegisterScreen from "./screens/auth/RegisterScreen";
 import FavoriteScreen from "./screens/app/FavoriteScreen";
 
-import { AuthContext, AuthProvider } from "./context/AuthContext"; // penting!
+import { AuthContext, AuthProvider } from "./context/AuthContext";
 
 import "./global.css";
 import EditProfileScreen from "./screens/app/EditProfileScreen";
@@ -667,12 +1111,118 @@ import ForgotPasswordScreen from "./screens/auth/ForgotPasswordScreen";
 import VerificationCodeScreen from "./screens/auth/VerificationCodeScreen";
 import ResetPasswordScreen from "./screens/auth/ResetPasswordScreen";
 import ReservationScreen from "./screens/app/ReservationScreen";
+import ChatScreen from "./screens/app/ChatScreen";
+import ChatDetailScreen from "./screens/app/ChatDetailScreen";
+import { BASE_URL } from "./api/responseUrl";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 const orangeThemeColor = "#f4511e";
 
-// Stack untuk tab Home
+/* ChatListScreen: small helper that ensures we have a user and navigates to ChatScreen */
+// function ChatListScreen({ navigation }) {
+//   const { user, loading } = useContext(AuthContext);
+
+//   useEffect(() => {
+//     if (!loading && user && user.id) {
+//       // navigate to ChatScreen in this stack and pass params
+//       navigation.navigate("ChatScreen", {
+//         userId: user.id,
+//         adminName: "Admin",
+//       });
+//     }
+//   }, [user, loading, navigation]);
+
+//   if (loading) {
+//     return (
+//       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+//         <ActivityIndicator size="large" />
+//       </View>
+//     );
+//   }
+
+//   // if user is not logged in or no user found, show message / link to login
+//   return (
+//     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+//       <Text>Opening chat...</Text>
+//     </View>
+//   );
+// }
+
+// function ChatListScreen({ navigation }) {
+//   const { user, loading } = useContext(AuthContext);
+
+//   useEffect(() => {
+//     if (!loading && user && user.id) {
+//       // ganti ke ID admin atau lawan bicara
+//       const adminId = 5; // <-- sesuaikan dengan DB kamu
+//       navigation.replace("ChatScreen", {
+//         userId: adminId,
+//         adminName: "Admin",
+//       });
+//     }
+//   }, [user, loading, navigation]);
+
+//   if (loading) {
+//     return (
+//       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+//         <ActivityIndicator size="large" />
+//       </View>
+//     );
+//   }
+
+//   return (
+//     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+//       <Text>Opening chat...</Text>
+//     </View>
+//   );
+// }
+
+function ChatListScreen({ navigation }) {
+  const { user, loading } = useContext(AuthContext);
+  const [admins, setAdmins] = React.useState([]);
+
+  useEffect(() => {
+    if (!loading) {
+      fetch(`${BASE_URL}/api/non-users`) // ganti BASE_URL
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) setAdmins(data.data);
+        })
+        .catch(err => console.error(err));
+    }
+  }, [loading]);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  return (
+    <View style={{ flex: 1, padding: 20 }}>
+      {admins.map((item) => (
+        <Text
+          key={item.id}
+          style={{ padding: 10, borderBottomWidth: 1 }}
+          onPress={() =>
+            navigation.navigate("ChatDetailScreen", {
+              otherUserId: item.id,
+              otherUserName: item.name,
+              otherUserAvatar: item.avatar ?? null,
+            })
+          }
+        >
+          {item.name}
+        </Text>
+      ))}
+    </View>
+  );
+}
+
+/* HomeStack */
 function HomeStack() {
   return (
     <Stack.Navigator
@@ -680,10 +1230,7 @@ function HomeStack() {
         headerStyle: { backgroundColor: orangeThemeColor },
         headerTintColor: "#ffffff",
         headerTitleAlign: "center",
-        headerTitleStyle: {
-          fontSize: 22,
-          fontWeight: "bold",
-        },
+        headerTitleStyle: { fontSize: 22, fontWeight: "bold" },
       }}
     >
       <Stack.Screen name="Home" component={HomeScreen} />
@@ -692,10 +1239,13 @@ function HomeStack() {
       <Stack.Screen name="CategorySearch" component={CategorySearchScreen} />
       <Stack.Screen name="BookSearch" component={BookSearchScreen} />
       <Stack.Screen name="Reservation Screen" component={ReservationScreen} />
+      {/* Keep ChatScreen available in this stack too if needed */}
+      {/* <Stack.Screen name="ChatScreen" component={ChatStack} /> */}
     </Stack.Navigator>
   );
 }
 
+/* ProfileStack */
 function ProfileStack() {
   return (
     <Stack.Navigator
@@ -703,13 +1253,10 @@ function ProfileStack() {
         headerStyle: { backgroundColor: orangeThemeColor },
         headerTintColor: "#ffffff",
         headerTitleAlign: "center",
-        headerTitleStyle: {
-          fontSize: 22,
-          fontWeight: "bold",
-        },
+        headerTitleStyle: { fontSize: 22, fontWeight: "bold" },
       }}
     >
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
       <Stack.Screen name="EditPasswordScreen" component={EditPasswordScreen} />
@@ -717,6 +1264,7 @@ function ProfileStack() {
   );
 }
 
+/* AuthStack */
 function AuthStack() {
   return (
     <Stack.Navigator
@@ -724,30 +1272,64 @@ function AuthStack() {
         headerStyle: { backgroundColor: orangeThemeColor },
         headerTintColor: "#ffffff",
         headerTitleAlign: "center",
-        headerTitleStyle: {
-          fontSize: 22,
-          fontWeight: "bold",
-        },
+        headerTitleStyle: { fontSize: 22, fontWeight: "bold" },
       }}
     >
-      <Tab.Screen name="Login" component={LoginScreen} />
-      {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
+      <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen
-        name="VerificationCode"
-        component={VerificationCodeScreen}
-      />
+      <Stack.Screen name="VerificationCode" component={VerificationCodeScreen} />
       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
     </Stack.Navigator>
   );
 }
 
-// Navigator untuk bagian dalam aplikasi setelah login
+/* ChatStack (Chats list + Chat screen) */
+// function ChatStack() {
+//   return (
+//     <Stack.Navigator
+//       screenOptions={{
+//         headerStyle: { backgroundColor: orangeThemeColor },
+//         headerTintColor: "#ffffff",
+//         headerTitleAlign: "center",
+//         headerTitleStyle: { fontSize: 22, fontWeight: "bold" },
+//       }}
+//     >
+//       <Stack.Screen name="Chats" component={ChatListScreen} options={{ title: "Chats" }} />
+//       <Stack.Screen name="ChatScreen" component={ChatScreen} options={{ title: "Chat" }} />
+//     </Stack.Navigator>
+//   );
+// }
+
+function ChatStack() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: orangeThemeColor },
+        headerTintColor: "#ffffff",
+        headerTitleAlign: "center",
+        headerTitleStyle: { fontSize: 22, fontWeight: "bold" },
+      }}
+    >
+      <Stack.Screen
+        name="ChatListScreen"
+        component={ChatListScreen}
+        options={{ title: "Chats" }}
+      />
+      <Stack.Screen
+        name="ChatDetailScreen"
+        component={ChatDetailScreen}
+        options={({ route }) => ({ title: route.params.otherUserName })}
+      />
+    </Stack.Navigator>
+  );
+}
+
+/* AppTabs */
 function AppTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="HomeScreen"
+      initialRouteName="Home"
       screenOptions={({ route }) => ({
         headerStyle: { backgroundColor: orangeThemeColor },
         headerTintColor: "#ffffff",
@@ -755,78 +1337,57 @@ function AppTabs() {
         headerTitleStyle: { fontSize: 22, fontWeight: "bold" },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          if (route.name === "HomeScreen")
-            iconName = focused ? "home" : "home-outline";
-          else if (route.name === "Loan")
-            iconName = focused ? "book" : "book-outline";
-          else if (route.name === "Profile")
-            iconName = focused ? "person-circle" : "person-circle-outline";
-
+          if (route.name === "Home") iconName = focused ? "home" : "home-outline";
+          else if (route.name === "Loan") iconName = focused ? "book" : "book-outline";
+          else if (route.name === "Chat") iconName = focused ? "chatbubbles" : "chatbubbles-outline";
+          else if (route.name === "Profile") iconName = focused ? "person-circle" : "person-circle-outline";
           return <Icon name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: "#ffffff",
         tabBarInactiveTintColor: "#ffc9b5",
-        tabBarStyle: {
-          paddingTop: 5,
-          backgroundColor: orangeThemeColor,
-          borderTopWidth: 0,
-        },
+        tabBarStyle: { paddingTop: 5, backgroundColor: orangeThemeColor, borderTopWidth: 0 },
       })}
     >
-      <Tab.Screen
-        name="HomeScreen"
-        component={HomeStack}
-        options={{ headerShown: false }}
-      />
+      <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
       <Tab.Screen name="Loan" component={LoanScreen} />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileStack}
-        options={{ headerShown: false }}
-      />
+      <Tab.Screen name="Chat" component={ChatStack} options={{ headerShown: false }} />
+      <Tab.Screen name="Profile" component={ProfileStack} options={{ headerShown: false }} />
     </Tab.Navigator>
   );
 }
 
-// 🔐 Root Navigator yang menentukan apakah user sudah login atau belum
+/* Root Navigator */
 function RootNavigator() {
   const { isAuthenticated, loading } = useContext(AuthContext);
 
-  if (loading) return null; // loading splash bisa ditambahkan di sini
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isAuthenticated ? (
         <Stack.Screen name="AppTabs" component={AppTabs} />
       ) : (
-        <>
-          {/* <Stack.Screen
-            name="ForgotPassword"
-            component={ForgotPasswordScreen}
-          />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen
-            name="VerificationCode"
-            component={VerificationCodeScreen}
-            />
-          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} /> */}
-          <Stack.Screen name="AuthStack" component={AuthStack} />
-        </>
+        <Stack.Screen name="AuthStack" component={AuthStack} />
       )}
     </Stack.Navigator>
   );
 }
 
-// Final App
+/* Final App with NavigationContainer */
 export default function App() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
-        {/* <NavigationContainer> */}
           <RootNavigator />
-        {/* </NavigationContainer> */}
       </AuthProvider>
     </SafeAreaProvider>
   );
 }
+
+
