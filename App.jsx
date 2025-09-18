@@ -1114,6 +1114,7 @@ import ReservationScreen from "./screens/app/ReservationScreen";
 import ChatScreen from "./screens/app/ChatScreen";
 import ChatDetailScreen from "./screens/app/ChatDetailScreen";
 import { BASE_URL } from "./api/responseUrl";
+import ChatListScreen from "./screens/app/ChatListScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -1178,49 +1179,58 @@ const orangeThemeColor = "#f4511e";
 //   );
 // }
 
-function ChatListScreen({ navigation }) {
-  const { user, loading } = useContext(AuthContext);
-  const [admins, setAdmins] = React.useState([]);
+// function ChatListScreen({ navigation }) {
+//   const { user, loading } = useContext(AuthContext);
+//   const [admins, setAdmins] = React.useState([]);
 
-  useEffect(() => {
-    if (!loading) {
-      fetch(`${BASE_URL}/api/non-users`) // ganti BASE_URL
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) setAdmins(data.data);
-        })
-        .catch(err => console.error(err));
-    }
-  }, [loading]);
+//   useEffect(() => {
+//     if (!loading) {
+//       fetch(`${BASE_URL}/api/non-users`) // ganti BASE_URL
+//         .then((res) => res.json())
+//         .then((data) => {
+//           if (data.success) setAdmins(data.data);
+//         })
+//         .catch((err) => console.error(err));
+//     }
+//   }, [loading]);
 
-  if (loading) {
-    return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+//   if (loading) {
+//     return (
+//       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+//         <ActivityIndicator size="large" />
+//       </View>
+//     );
+//   }
 
-  return (
-    <View style={{ flex: 1, padding: 20 }}>
-      {admins.map((item) => (
-        <Text
-          key={item.id}
-          style={{ padding: 10, borderBottomWidth: 1 }}
-          onPress={() =>
-            navigation.navigate("ChatDetailScreen", {
-              otherUserId: item.id,
-              otherUserName: item.name,
-              otherUserAvatar: item.avatar ?? null,
-            })
-          }
-        >
-          {item.name}
-        </Text>
-      ))}
-    </View>
-  );
-}
+//   return (
+//     <View style={{ flex: 1, padding: 20 }}>
+//       {admins.map((item) => (
+//         <Text
+//           key={item.id}
+//           style={{ padding: 10, borderBottomWidth: 1 }}
+//           onPress={() =>
+//             navigation.navigate("ChatDetailScreen", {
+//               otherUserId: item.id,
+//               otherUserName: item.name,
+//               otherUserAvatar: item.avatar ?? null,
+//             })
+//           }
+//         >
+//           {/* <Image
+//             source={
+//               item.avatar
+//                 ? // ? { uri: `${BASE_URL}/storage/${item.avatar}` }
+//                   { uri: otherUserAvatar }
+//                 : require("assets/profile.png")
+//             }
+//             style={styles.avatar}
+//           /> */}
+//           {item.name}
+//         </Text>
+//       ))}
+//     </View>
+//   );
+// }
 
 /* HomeStack */
 function HomeStack() {
@@ -1278,7 +1288,10 @@ function AuthStack() {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="VerificationCode" component={VerificationCodeScreen} />
+      <Stack.Screen
+        name="VerificationCode"
+        component={VerificationCodeScreen}
+      />
       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
     </Stack.Navigator>
   );
@@ -1337,21 +1350,41 @@ function AppTabs() {
         headerTitleStyle: { fontSize: 22, fontWeight: "bold" },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          if (route.name === "Home") iconName = focused ? "home" : "home-outline";
-          else if (route.name === "Loan") iconName = focused ? "book" : "book-outline";
-          else if (route.name === "Chat") iconName = focused ? "chatbubbles" : "chatbubbles-outline";
-          else if (route.name === "Profile") iconName = focused ? "person-circle" : "person-circle-outline";
+          if (route.name === "Home")
+            iconName = focused ? "home" : "home-outline";
+          else if (route.name === "Loan")
+            iconName = focused ? "book" : "book-outline";
+          else if (route.name === "Chat")
+            iconName = focused ? "chatbubbles" : "chatbubbles-outline";
+          else if (route.name === "Profile")
+            iconName = focused ? "person-circle" : "person-circle-outline";
           return <Icon name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: "#ffffff",
         tabBarInactiveTintColor: "#ffc9b5",
-        tabBarStyle: { paddingTop: 5, backgroundColor: orangeThemeColor, borderTopWidth: 0 },
+        tabBarStyle: {
+          paddingTop: 5,
+          backgroundColor: orangeThemeColor,
+          borderTopWidth: 0,
+        },
       })}
     >
-      <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
+      <Tab.Screen
+        name="Home"
+        component={HomeStack}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen name="Loan" component={LoanScreen} />
-      <Tab.Screen name="Chat" component={ChatStack} options={{ headerShown: false }} />
-      <Tab.Screen name="Profile" component={ProfileStack} options={{ headerShown: false }} />
+      <Tab.Screen
+        name="Chat"
+        component={ChatStack}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileStack}
+        options={{ headerShown: false }}
+      />
     </Tab.Navigator>
   );
 }
@@ -1384,10 +1417,8 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
-          <RootNavigator />
+        <RootNavigator />
       </AuthProvider>
     </SafeAreaProvider>
   );
 }
-
-

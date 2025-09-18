@@ -699,7 +699,7 @@ export default function ChatDetailScreen({ route }) {
           <Image
             source={
               otherUserAvatar
-                ? { uri: otherUserAvatar }
+                ? { uri: `${BASE_URL}/storage/profile_images/${otherUserAvatar}` }
                 : require("../../assets/profile.png")
             }
             style={styles.avatar}
