@@ -526,7 +526,7 @@ export default function ProfileScreen() {
 
           <TouchableOpacity
             className="flex-row items-center py-3 border-b border-gray-200"
-            onPress={() => navigation.navigate("EditProfileScreen")}
+            onPress={() => navigation.navigate("Edit Profile Screen")}
           >
             <Ionicons name="person-outline" size={20} color="#555" />
             <Text className="ml-3 text-base text-gray-800">Edit Profile</Text>
@@ -534,7 +534,7 @@ export default function ProfileScreen() {
 
           <TouchableOpacity
             className="flex-row items-center py-3 border-b border-gray-200"
-            onPress={() => navigation.navigate("EditPasswordScreen")}
+            onPress={() => navigation.navigate("Edit Password Screen")}
           >
             <Ionicons name="lock-closed-outline" size={20} color="#555" />
             <Text className="ml-3 text-base text-gray-800">Edit Password</Text>
@@ -542,7 +542,7 @@ export default function ProfileScreen() {
 
           <TouchableOpacity
             className="flex-row items-center py-3 border-b border-gray-200"
-            onPress={() => navigation.navigate("FavoriteScreen")}
+            onPress={() => navigation.navigate("Favorite Screen")}
           >
             <Ionicons name="heart-outline" size={20} color="#555" />
             <Text className="ml-3 text-base text-gray-800">Favorite</Text>

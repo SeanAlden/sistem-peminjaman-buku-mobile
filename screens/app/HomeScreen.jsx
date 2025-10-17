@@ -259,7 +259,7 @@ export default function HomeScreen({ navigation }) {
                 Categories
               </Text>
               <TouchableOpacity
-                onPress={() => navigation.navigate("CategorySearch")}
+                onPress={() => navigation.navigate("Category Search")}
               >
                 <Text className="text-blue-600 text-sb">Search Category</Text>
               </TouchableOpacity>
@@ -279,7 +279,7 @@ export default function HomeScreen({ navigation }) {
                 Books
               </Text>
               <TouchableOpacity
-                onPress={() => navigation.navigate("BookSearch")}
+                onPress={() => navigation.navigate("Book Search")}
               >
                 <Text className="text-blue-600 text-sb">Search Book</Text>
               </TouchableOpacity>
@@ -292,7 +292,7 @@ export default function HomeScreen({ navigation }) {
                 <BookCard
                   item={item}
                   onNavigate={(bookId) =>
-                    navigation.navigate("BookDetail", { bookId })
+                    navigation.navigate("Book Detail", { bookId })
                   }
                   onToggleFavorite={toggleFavorite}
                   isFavorited={favorites.includes(item.id)}

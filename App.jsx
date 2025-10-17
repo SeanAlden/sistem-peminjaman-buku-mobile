@@ -1245,9 +1245,9 @@ function HomeStack() {
     >
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Category Detail" component={CategoryDetailScreen} />
-      <Stack.Screen name="BookDetail" component={BookDetailScreen} />
-      <Stack.Screen name="CategorySearch" component={CategorySearchScreen} />
-      <Stack.Screen name="BookSearch" component={BookSearchScreen} />
+      <Stack.Screen name="Book Detail" component={BookDetailScreen} />
+      <Stack.Screen name="Category Search" component={CategorySearchScreen} />
+      <Stack.Screen name="Book Search" component={BookSearchScreen} />
       <Stack.Screen name="Reservation Screen" component={ReservationScreen} />
       {/* Keep ChatScreen available in this stack too if needed */}
       {/* <Stack.Screen name="ChatScreen" component={ChatStack} /> */}
@@ -1267,9 +1267,9 @@ function ProfileStack() {
       }}
     >
       <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="FavoriteScreen" component={FavoriteScreen} />
-      <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
-      <Stack.Screen name="EditPasswordScreen" component={EditPasswordScreen} />
+      <Stack.Screen name="Favorite Screen" component={FavoriteScreen} />
+      <Stack.Screen name="Edit Profile Screen" component={EditProfileScreen} />
+      <Stack.Screen name="Edit Password Screen" component={EditPasswordScreen} />
     </Stack.Navigator>
   );
 }
@@ -1286,13 +1286,13 @@ function AuthStack() {
       }}
     >
       <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+      <Stack.Screen name="Forgot Password" component={ForgotPasswordScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen
         name="VerificationCode"
         component={VerificationCodeScreen}
       />
-      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+      <Stack.Screen name="Reset Password" component={ResetPasswordScreen} />
     </Stack.Navigator>
   );
 }

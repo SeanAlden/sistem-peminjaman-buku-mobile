@@ -23,10 +23,10 @@ export default function BookSearchScreen({ navigation }) {
     try {
       const token = await AsyncStorage.getItem("auth_token");
       const res = await fetch(`${BASE_URL}/api/books`, {
-         headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
       });
       const data = await res.json();
       if (data.success) {
@@ -61,14 +61,17 @@ export default function BookSearchScreen({ navigation }) {
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate("BookDetail", { bookId: item.id })}
+      onPress={() => navigation.navigate("Book Detail", { bookId: item.id })}
       className="flex-row items-center p-3 mb-3 bg-white rounded-lg shadow"
     >
       <Image
         source={
-          (!item.image_url && item.image_url.trim() !== "") || imageError
-            ? require("../../assets/avatar.png") // gambar default lokal
-            : { uri: `${item.image_url}`}
+          // (!item.image_url && item.image_url.trim() !== "") || imageError
+          //   ? require("../../assets/avatar.png") // gambar default lokal
+          //   : { uri: `${item.image_url}`}
+          !item.image_url || item.image_url.trim() === "" || imageError
+            ? require("../../assets/avatar.png")
+            : { uri: item.image_url }
         }
         className="w-16 h-20 mr-4 rounded"
         resizeMode="contain"
