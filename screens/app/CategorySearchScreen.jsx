@@ -18,7 +18,7 @@ export default function CategorySearchScreen({ navigation }) {
   const [search, setSearch] = useState("");
 
   const fetchCategories = () => {
-    fetch(`${BASE_URL}/api/categories`)
+    fetch(`${BASE_URL}/api/api/categories`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -64,7 +64,7 @@ export default function CategorySearchScreen({ navigation }) {
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate("CategoryDetail", {
+              navigation.navigate("Category Detail", {
                 categoryId: item.id,
                 categoryName: item.name,
               })

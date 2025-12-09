@@ -25,7 +25,7 @@
 
 //   // const handleRegister = async () => {
 //   //   try {
-//   //     await axios.post(`${BASE_URL}/api/register`, form);
+//   //     await axios.post(`${BASE_URL}/api/api/register`, form);
 //   //     alert("Pendaftaran berhasil. Silakan login.");
 //   //     navigation.navigate("Login");
 //   //   } catch (error) {
@@ -44,7 +44,7 @@
 
 //   const handleRegister = async () => {
 //     try {
-//       await axios.post(`${BASE_URL}/api/register`, form);
+//       await axios.post(`${BASE_URL}/api/api/register`, form);
 //       alert("Pendaftaran berhasil. Silakan login.");
 //       navigation.navigate("Login");
 //     } catch (error) {
@@ -141,7 +141,7 @@ export default function RegisterScreen({ navigation }) {
 
   const handleRegister = async () => {
     try {
-      await axios.post(`${BASE_URL}/api/register`, form);
+      await axios.post(`${BASE_URL}/api/api/register`, form);
       alert("Pendaftaran berhasil. Silakan login.");
       navigation.navigate("Login");
     } catch (error) {

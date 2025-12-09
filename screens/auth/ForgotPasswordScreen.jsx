@@ -9,9 +9,9 @@ export default function ForgotPasswordScreen({ navigation }) {
   const sendCode = async () => {
     if (!email) return Alert.alert("Error", "Email harus diisi.");
     try {
-      await axios.post(`${BASE_URL}/api/forgot-password`, { email });
+      await axios.post(`${BASE_URL}/api/api/forgot-password`, { email });
       Alert.alert("Berhasil", "Kode verifikasi dikirim ke email Anda.");
-      navigation.navigate("VerificationCode", { email });
+      navigation.navigate("Verification Code", { email });
     } catch (error) {
       Alert.alert("Gagal", error.response?.data?.message || "Terjadi kesalahan");
     }

@@ -25,7 +25,8 @@ const LoanCard = ({ item, onReturn, onCancel }) => {
                     source={
                         !imageUrl || imageError
                             ? require("../../assets/avatar.png")
-                            : { uri: `${BASE_URL}/storage/${item.book.image_url}` }
+                            // : { uri: `${BASE_URL}/storage/${item.book.image_url}` }
+                            : { uri: `https://cellar-c2.services.clever-cloud.com/book-image-bucket/${item.book.image_url}` }
                     }
                     className="w-[90px] h-[90px] rounded-md mr-3"
                     resizeMode="contain"
@@ -75,7 +76,7 @@ export default function LoanScreen() {
     const fetchLoans = async () => {
         try {
             const token = await AsyncStorage.getItem("auth_token");
-            const res = await axios.get(`${BASE_URL}/api/loans`, {
+            const res = await axios.get(`${BASE_URL}/api/api/loans`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (res.data.success) {
@@ -101,7 +102,7 @@ export default function LoanScreen() {
         try {
             const token = await AsyncStorage.getItem("auth_token");
             const response = await axios.post(
-                `${BASE_URL}/api/loans/${id}/request-return`, // Call the new endpoint
+                `${BASE_URL}/api/api/loans/${id}/request-return`, // Call the new endpoint
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -124,7 +125,7 @@ export default function LoanScreen() {
                 onPress: async () => {
                     try {
                         const token = await AsyncStorage.getItem("auth_token");
-                        await axios.delete(`${BASE_URL}/api/loans/${id}`, {
+                        await axios.delete(`${BASE_URL}/api/api/loans/${id}`, {
                             headers: { Authorization: `Bearer ${token}` },
                         });
                         Alert.alert("Berhasil", "Peminjaman telah dibatalkan.");

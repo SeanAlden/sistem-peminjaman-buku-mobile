@@ -26,7 +26,7 @@
 
 //     try {
 //       // 2. Kirim permintaan login ke backend
-//       const res = await axios.post(`${BASE_URL}/api/login`, {
+//       const res = await axios.post(`${BASE_URL}/api/api/login`, {
 //         email,
 //         password,
 //       });
@@ -138,7 +138,7 @@ export default function LoginScreen({ navigation }) {
     }
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/login`, {
+      const res = await axios.post(`${BASE_URL}/api/api/login`, {
         email,
         password,
       });
@@ -196,7 +196,7 @@ export default function LoginScreen({ navigation }) {
           />
           <Button title="Login" onPress={handleLogin} />
           <TouchableOpacity
-            onPress={() => navigation.navigate("ForgotPassword")}
+            onPress={() => navigation.navigate("Forgot Password")}
           >
             <Text style={styles.link}>Lupa Password?</Text>
           </TouchableOpacity>

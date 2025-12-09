@@ -29,7 +29,8 @@ export default function BookDetailScreen({ route, navigation }) {
       const token = await AsyncStorage.getItem("auth_token");
 
       const response = await axios.get(
-        `${BASE_URL}/api/book-details/${bookId}`,
+        // `${BASE_URL}/api/api/book-details/${bookId}`,
+        `${BASE_URL}/api/api/book-details/${bookId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -65,7 +66,7 @@ export default function BookDetailScreen({ route, navigation }) {
       returnDate.setDate(today.getDate() + bookData.loan_duration);
 
       const response = await axios.post(
-        `${BASE_URL}/api/loans`,
+        `${BASE_URL}/api/api/loans`,
         {
           book_id: bookData.id,
           return_date: returnDate.toISOString().split("T")[0],
@@ -91,7 +92,7 @@ export default function BookDetailScreen({ route, navigation }) {
     try {
       const token = await AsyncStorage.getItem("auth_token");
       const response = await axios.post(
-        `${BASE_URL}/api/reservations`,
+        `${BASE_URL}/api/api/reservations`,
         { book_id: bookData.id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -116,7 +117,7 @@ export default function BookDetailScreen({ route, navigation }) {
     try {
       const token = await AsyncStorage.getItem("auth_token");
       const response = await axios.delete(
-        `${BASE_URL}/api/reservations/${reservationId}`,
+        `${BASE_URL}/api/api/reservations/${reservationId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -156,6 +157,7 @@ export default function BookDetailScreen({ route, navigation }) {
           (!bookData.image_url && bookData.image_url.trim() !== "") ||
           imageError
             ? require("../../assets/avatar.png")
+            // : { uri: bookData.image_url }
             : { uri: bookData.image_url }
         }
         className="w-full h-64 mb-4 rounded-xl"

@@ -34,7 +34,7 @@ export default function EditPasswordScreen({ navigation }) {
       const token = await AsyncStorage.getItem("auth_token");
 
       await axios.put(
-        `${BASE_URL}/api/user/password`,
+        `${BASE_URL}/api/api/user/password`,
         {
           current_password: currentPassword,
           new_password: newPassword,

@@ -13,7 +13,7 @@ export default function ReservationScreen() {
     const fetchReservations = async () => {
         try {
             const token = await AsyncStorage.getItem("auth_token");
-            const res = await axios.get(`${BASE_URL}/api/my-reservations`, {
+            const res = await axios.get(`${BASE_URL}/api/api/my-reservations`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setReservations(res.data.data);
@@ -41,7 +41,7 @@ export default function ReservationScreen() {
                 onPress: async () => {
                     try {
                         const token = await AsyncStorage.getItem("auth_token");
-                        await axios.delete(`${BASE_URL}/api/reservations/${id}`, {
+                        await axios.delete(`${BASE_URL}/api/api/reservations/${id}`, {
                             headers: { Authorization: `Bearer ${token}` },
                         });
                         Alert.alert("Berhasil", "Reservasi dibatalkan");

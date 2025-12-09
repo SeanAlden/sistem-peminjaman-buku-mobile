@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://73fd1da4a59f.ngrok-free.app';
+export const BASE_URL = 'https://sistem-peminjaman-buku-admin.vercel.app';

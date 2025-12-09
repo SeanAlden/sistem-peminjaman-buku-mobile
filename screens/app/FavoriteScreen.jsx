@@ -18,15 +18,26 @@ import { BASE_URL } from "../../api/responseUrl";
 // Komponen untuk setiap item buku dalam daftar
 const BookItem = ({ book }) => (
   <View className="flex-row p-4 mx-4 mb-5 overflow-hidden bg-white shadow-lg rounded-xl">
-    <Image
+    {/* <Image
       source={{
-        uri:
-          `${BASE_URL}/storage/${book.image_url}` ||
-          "https://via.placeholder.com/100x150.png?text=No+Image",
+        uri: `https://cellar-c2.services.clever-cloud.com/book-image-bucket/${book.image_url}` ||
+          require("../../assets/avatar.png"),
       }}
       className="w-24 rounded-lg h-36"
       resizeMode="contain"
+    /> */}
+    <Image
+      source={
+        book.image_url
+          ? {
+              uri: `https://cellar-c2.services.clever-cloud.com/book-image-bucket/${book.image_url}`,
+            }
+          : require("../../assets/avatar.png")
+      }
+      className="w-24 rounded-lg h-36"
+      resizeMode="contain"
     />
+
     <View className="justify-center flex-1 ml-4">
       <Text className="text-lg font-bold text-gray-800" numberOfLines={2}>
         {book.title}
@@ -65,7 +76,7 @@ const FavoriteScreen = () => {
         throw new Error("Token tidak ditemukan. Silakan login kembali.");
       }
 
-      const response = await axios.get(`${BASE_URL}/api/favorites`, {
+      const response = await axios.get(`${BASE_URL}/api/api/favorites`, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",

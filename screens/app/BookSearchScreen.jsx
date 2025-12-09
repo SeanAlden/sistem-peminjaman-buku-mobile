@@ -22,7 +22,7 @@ export default function BookSearchScreen({ navigation }) {
   const fetchBooks = async () => {
     try {
       const token = await AsyncStorage.getItem("auth_token");
-      const res = await fetch(`${BASE_URL}/api/books`, {
+      const res = await fetch(`${BASE_URL}/api/api/books`, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",

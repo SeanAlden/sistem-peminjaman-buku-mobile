@@ -9,9 +9,9 @@ export default function VerificationCodeScreen({ route, navigation }) {
 
   const verifyCode = async () => {
     try {
-      await axios.post(`${BASE_URL}/api/verify-code`, { email, code });
+      await axios.post(`${BASE_URL}/api/api/verify-code`, { email, code });
       Alert.alert("Berhasil", "Kode berhasil diverifikasi");
-      navigation.navigate("ResetPassword", { email });
+      navigation.navigate("Reset Password", { email });
     } catch (error) {
       Alert.alert("Gagal", error.response?.data?.message || "Terjadi kesalahan");
     }

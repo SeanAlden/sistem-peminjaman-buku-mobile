@@ -163,7 +163,7 @@
 
 //   async function fetchCategoryDetails() {
 //     try {
-//       const response = await fetch(`${BASE_URL}/api/categories/${categoryId}`);
+//       const response = await fetch(`${BASE_URL}/api/api/categories/${categoryId}`);
 //       const data = await response.json();
 
 //       if (data.success) {
@@ -318,7 +318,7 @@
 
 //   async function fetchCategoryDetails() {
 //     try {
-//       const response = await fetch(`${BASE_URL}/api/categories/${categoryId}`);
+//       const response = await fetch(`${BASE_URL}/api/api/categories/${categoryId}`);
 //       const data = await response.json();
 
 //       if (data.success) {
@@ -426,7 +426,7 @@
 
 //   async function fetchCategoryDetails() {
 //     try {
-//       const response = await fetch(`${BASE_URL}/api/categories/${categoryId}`);
+//       const response = await fetch(`${BASE_URL}/api/api/categories/${categoryId}`);
 //       const data = await response.json();
 
 //       if (data.success) {
@@ -504,7 +504,8 @@ import {
 import { BASE_URL } from "../../api/responseUrl";
 
 const BookCard = ({ item, onPress }) => {
-  const imageUrl = `${BASE_URL}/storage/${item.image_url}`;
+  // const imageUrl = `${BASE_URL}/storage/${item.image_url}`;
+  const imageUrl = `https://cellar-c2.services.clever-cloud.com/book-image-bucket/${item.image_url}`;
   const [imageError, setImageError] = useState(false);
 
   return (
@@ -545,7 +546,7 @@ export default function CategoryDetailScreen({ route, navigation }) {
 
   async function fetchCategoryDetails() {
     try {
-      const response = await fetch(`${BASE_URL}/api/categories/${categoryId}`);
+      const response = await fetch(`${BASE_URL}/api/api/categories/${categoryId}`);
       const data = await response.json();
 
       if (data.success) {
@@ -591,7 +592,7 @@ export default function CategoryDetailScreen({ route, navigation }) {
           renderItem={({ item }) => (
             <BookCard
               item={item}
-              onPress={() => navigation.navigate("BookDetail", { bookId: item.id })}
+              onPress={() => navigation.navigate("Book Detail", { bookId: item.id })}
               // onPress={() => navigation.navigate("BookDetail", { bookId: item.id })}
             />
           )}

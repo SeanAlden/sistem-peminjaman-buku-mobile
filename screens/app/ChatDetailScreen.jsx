@@ -193,7 +193,7 @@
 
 //       // load history
 //       try {
-//         const res = await fetch(`${BASE_URL}/api/chat/messages/${otherUserId}`, {
+//         const res = await fetch(`${BASE_URL}/api/api/chat/messages/${otherUserId}`, {
 //           headers: {
 //             Accept: "application/json",
 //             Authorization: `Bearer ${token}`
@@ -270,7 +270,7 @@
 //     const body = { message: input.trim() };
 
 //     try {
-//       const res = await fetch(`${BASE_URL}/api/chat/send/${otherUserId}`, {
+//       const res = await fetch(`${BASE_URL}/api/api/chat/send/${otherUserId}`, {
 //         method: "POST",
 //         headers: {
 //           Accept: "application/json",
@@ -407,7 +407,7 @@
 //     if (!token) return;
 
 //     try {
-//       const res = await fetch(`${BASE_URL}/api/chat/messages/${otherUserId}`, {
+//       const res = await fetch(`${BASE_URL}/api/api/chat/messages/${otherUserId}`, {
 //         headers: {
 //           Accept: "application/json",
 //           Authorization: `Bearer ${token}`,
@@ -443,7 +443,7 @@
 //     }
 
 //     try {
-//       const res = await fetch(`${BASE_URL}/api/chat/send/${otherUserId}`, {
+//       const res = await fetch(`${BASE_URL}/api/api/chat/send/${otherUserId}`, {
 //         method: "POST",
 //         headers: {
 //           Accept: "application/json",
@@ -586,7 +586,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../api/responseUrl";
@@ -608,12 +608,15 @@ export default function ChatDetailScreen({ route }) {
     if (!token) return;
 
     try {
-      const res = await fetch(`${BASE_URL}/api/chat/messages/${otherUserId}`, {
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await fetch(
+        `${BASE_URL}/api/api/chat/messages/${otherUserId}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (res.ok) {
         const json = await res.json();
@@ -644,7 +647,7 @@ export default function ChatDetailScreen({ route }) {
     }
 
     try {
-      const res = await fetch(`${BASE_URL}/api/chat/send/${otherUserId}`, {
+      const res = await fetch(`${BASE_URL}/api/api/chat/send/${otherUserId}`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -667,18 +670,45 @@ export default function ChatDetailScreen({ route }) {
     }
   };
 
+  // const renderItem = ({ item }) => {
+  //   const isMe = String(item.from_id) === String(authUser?.id);
+  //   return (
+  //     <View style={[styles.msgRow, isMe ? styles.msgRowLeft : styles.msgRowRight]}>
+  //       <View style={[styles.bubble, isMe ? styles.bubbleMe : styles.bubbleOther]}>
+  //         <Text style={isMe ? styles.bubbleTextMe : styles.bubbleTextOther}>
+  //           {/* {(item.from ?? item.sender?.name)
+  //             ? (isMe ? "You" : item.from ?? item.sender?.name) + ": "
+  //             : ""} */}
+  //           {item.body}
+  //         </Text>
+  //         <Text style={styles.time}>
+  //           {item.created_at
+  //             ? item.created_at.replace("T", " ").split(".")[0]
+  //             : ""}
+  //         </Text>
+  //       </View>
+  //     </View>
+  //   );
+  // };
+
   const renderItem = ({ item }) => {
     const isMe = String(item.from_id) === String(authUser?.id);
+
     return (
-      <View style={[styles.msgRow, isMe ? styles.msgRowLeft : styles.msgRowRight]}>
-        <View style={[styles.bubble, isMe ? styles.bubbleMe : styles.bubbleOther]}>
+      <View
+        style={[styles.msgRow, isMe ? styles.msgRowRight : styles.msgRowLeft]}
+      >
+        <View
+          style={[styles.bubble, isMe ? styles.bubbleMe : styles.bubbleOther]}
+        >
           <Text style={isMe ? styles.bubbleTextMe : styles.bubbleTextOther}>
-            {(item.from ?? item.sender?.name)
-              ? (isMe ? "You" : item.from ?? item.sender?.name) + ": "
-              : ""}
+            {/* {(item.from ?? item.sender?.name)
+              ? (isMe ? "You" : (item.from ?? item.sender?.name)) + ": "
+              : ""} */}
             {item.body}
           </Text>
-          <Text style={styles.time}>
+
+          <Text style={isMe ? styles.senderChatTime : styles.receiverChatTime}>
             {item.created_at
               ? item.created_at.replace("T", " ").split(".")[0]
               : ""}
@@ -699,7 +729,10 @@ export default function ChatDetailScreen({ route }) {
           <Image
             source={
               otherUserAvatar
-                ? { uri: `${BASE_URL}/storage/profile_images/${otherUserAvatar}` }
+                ? // ? { uri: `${BASE_URL}/storage/profile_images/${otherUserAvatar}` }
+                  {
+                    uri: `https://cellar-c2.services.clever-cloud.com/book-image-bucket/${otherUserAvatar}`,
+                  }
                 : require("../../assets/profile.png")
             }
             style={styles.avatar}
@@ -714,7 +747,9 @@ export default function ChatDetailScreen({ route }) {
             ref={flatListRef}
             data={messages}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id?.toString() ?? Math.random().toString()}
+            keyExtractor={(item) =>
+              item.id?.toString() ?? Math.random().toString()
+            }
             contentContainerStyle={{ padding: 10, flexGrow: 1 }}
             onContentSizeChange={() =>
               flatListRef.current?.scrollToEnd({ animated: true })
@@ -739,43 +774,95 @@ export default function ChatDetailScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
+  container: { flex: 1, backgroundColor: "#F9FAFB" },
+
   header: {
     flexDirection: "row",
     alignItems: "center",
     padding: 12,
     borderBottomWidth: 1,
-    borderColor: "#eee",
+    borderColor: "#e5e7eb",
+    backgroundColor: "#fff",
+    elevation: 3,
   },
-  avatar: { width: 40, height: 40, borderRadius: 20, marginRight: 10 },
-  title: { fontSize: 18, fontWeight: "bold" },
-  msgRow: { marginVertical: 6, flexDirection: "row" },
-  msgRowLeft: { justifyContent: "flex-start", marginLeft: 6 },
-  msgRowRight: { justifyContent: "flex-end", marginRight: 6 },
-  bubble: { maxWidth: "80%", padding: 10, borderRadius: 10 },
-  bubbleMe: { backgroundColor: "#34D399", alignSelf: "flex-start" }, // hijau ke kiri
-  bubbleOther: { backgroundColor: "#E5E7EB", alignSelf: "flex-end" }, // abu ke kanan
-  bubbleTextMe: { color: "#fff" },
-  bubbleTextOther: { color: "#111827" },
-  time: { fontSize: 10, color: "#6B7280", marginTop: 6 },
-  inputContainer: {
-    flexDirection: "row",
-    padding: 8,
-    borderTopWidth: 1,
+
+  avatar: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    marginRight: 12,
+    borderWidth: 1,
     borderColor: "#e5e7eb",
   },
+
+  title: { fontSize: 17, fontWeight: "bold", color: "#111827" },
+
+  msgRow: {
+    marginVertical: 6,
+    flexDirection: "row",
+    paddingHorizontal: 6,
+  },
+
+  msgRowLeft: { justifyContent: "flex-start" },
+  msgRowRight: { justifyContent: "flex-end" },
+
+  bubble: {
+    maxWidth: "78%",
+    padding: 10,
+    borderRadius: 14,
+    elevation: 1,
+  },
+
+  bubbleMe: {
+    backgroundColor: "#23B882FF",
+    borderBottomRightRadius: 2,
+  },
+
+  bubbleOther: {
+    backgroundColor: "#E5E7EB",
+    borderBottomLeftRadius: 2,
+  },
+
+  bubbleTextMe: { color: "#fff", fontSize: 14 },
+  bubbleTextOther: { color: "#111827", fontSize: 14 },
+
+  senderChatTime: {
+    fontSize: 10,
+    color: "#FFFFFFFF",
+    marginTop: 4,
+    alignSelf: "flex-end",
+  },
+
+  receiverChatTime: {
+    fontSize: 10,
+    color: "#6B7280",
+    marginTop: 4,
+    alignSelf: "flex-end",
+  },
+
+  inputContainer: {
+    flexDirection: "row",
+    padding: 10,
+    borderTopWidth: 1,
+    borderColor: "#e5e7eb",
+    backgroundColor: "#fff",
+  },
+
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#ddd",
-    padding: 8,
-    borderRadius: 6,
-    marginRight: 8,
+    borderColor: "#d1d5db",
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: "#fff",
+    paddingHorizontal: 14,
   },
+
   sendBtn: {
     backgroundColor: "#f97316",
-    paddingHorizontal: 14,
+    paddingHorizontal: 18,
     justifyContent: "center",
-    borderRadius: 6,
+    borderRadius: 20,
+    marginLeft: 8,
   },
 });

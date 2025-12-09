@@ -14,7 +14,7 @@ export default function ResetPasswordScreen({ route, navigation }) {
     }
 
     try {
-      await axios.post(`${BASE_URL}/api/reset-password`, {
+      await axios.post(`${BASE_URL}/api/api/reset-password`, {
         email,
         new_password: newPassword,
       });

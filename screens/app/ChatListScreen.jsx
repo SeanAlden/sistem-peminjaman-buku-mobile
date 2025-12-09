@@ -84,7 +84,7 @@ const ChatListScreen = ({ navigation }) => {
   const [admins, setAdmins] = useState([]);
 
   useEffect(() => {
-    fetch(`${BASE_URL}/api/non-users`)
+    fetch(`${BASE_URL}/api/api/non-users`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) setAdmins(data.data);
@@ -106,8 +106,8 @@ const ChatListScreen = ({ navigation }) => {
     >
       <Image
         source={
-          item.profile_image
-            ? { uri: `${BASE_URL}/storage/profile_images/${item.profile_image}` }
+          item.profile_image_url
+            ? { uri: item.profile_image_url }
             : require("../../assets/profile.png")
         }
         style={styles.avatar}

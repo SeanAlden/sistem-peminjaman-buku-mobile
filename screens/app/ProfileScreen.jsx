@@ -213,7 +213,7 @@
 //       if (!token) throw new Error("Token not found");
 
 //       await axios.post(
-//         `${BASE_URL}/api/logout`,
+//         `${BASE_URL}/api/api/logout`,
 //         {},
 //         {
 //           headers: {
@@ -363,31 +363,63 @@ export default function ProfileScreen() {
   //   }
   // };
 
+  // const loadUser = async () => {
+  //   try {
+  //     const token = await AsyncStorage.getItem("auth_token");
+
+  //     if (!token) return;
+
+  //     // Fetch email dari auth_user (localStorage)
+  //     const userData = await AsyncStorage.getItem("auth_user");
+  //     if (userData) {
+  //       const user = JSON.parse(userData);
+  //       setUserEmail(user.email || "guest@example.com");
+  //     }
+
+  //     // Fetch profile image via API
+  //     const res = await axios.get(`${BASE_URL}/api/api/user/profile-image`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         Accept: "application/json",
+  //       },
+  //     });
+
+  //     const image = res.data.profile_image;
+
+  //     if (image) {
+  //       setProfileImage(`${BASE_URL}/storage/profile_images/${image}`);
+  //     } else {
+  //       setProfileImage(null);
+  //     }
+  //   } catch (err) {
+  //     console.error("Gagal load user atau gambar:", err);
+  //   }
+  // };
+
   const loadUser = async () => {
     try {
       const token = await AsyncStorage.getItem("auth_token");
-
       if (!token) return;
 
-      // Fetch email dari auth_user (localStorage)
+      // Set email dari local storage
       const userData = await AsyncStorage.getItem("auth_user");
       if (userData) {
         const user = JSON.parse(userData);
         setUserEmail(user.email || "guest@example.com");
       }
 
-      // Fetch profile image via API
-      const res = await axios.get(`${BASE_URL}/api/user/profile-image`, {
+      // Fetch gambar profil
+      const res = await axios.get(`${BASE_URL}/api/api/user/profile-image`, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
       });
 
-      const image = res.data.profile_image;
+      const imageUrl = res.data.profile_image;
 
-      if (image) {
-        setProfileImage(`${BASE_URL}/storage/profile_images/${image}`);
+      if (imageUrl) {
+        setProfileImage(imageUrl); // langsung pakai S3 URL
       } else {
         setProfileImage(null);
       }
@@ -406,7 +438,7 @@ export default function ProfileScreen() {
       if (!token) throw new Error("Token not found");
 
       await axios.post(
-        `${BASE_URL}/api/logout`,
+        `${BASE_URL}/api/api/logout`,
         {},
         {
           headers: {
@@ -457,7 +489,7 @@ export default function ProfileScreen() {
       });
 
       const res = await axios.post(
-        `${BASE_URL}/api/user/update-profile-image`,
+        `${BASE_URL}/api/api/user/update-profile-image`,
         formData,
         {
           headers: {
@@ -468,14 +500,24 @@ export default function ProfileScreen() {
         }
       );
 
-      const imageUrl = `${BASE_URL}/storage/profile_images/${res.data.profile_image}`;
+      // const imageUrl = `${BASE_URL}/storage/profile_images/${res.data.profile_image}`;
+      const imageUrl = res.data.profile_image;
+
       setProfileImage(imageUrl);
 
       // Perbarui juga AsyncStorage
+      // const userData = await AsyncStorage.getItem("auth_user");
+      // if (userData) {
+      //   const user = JSON.parse(userData);
+      //   user.profile_image = res.data.profile_image;
+      //   await AsyncStorage.setItem("auth_user", JSON.stringify(user));
+      // }
+
       const userData = await AsyncStorage.getItem("auth_user");
       if (userData) {
         const user = JSON.parse(userData);
         user.profile_image = res.data.profile_image;
+        user.profile_image_url = res.data.profile_image_url;
         await AsyncStorage.setItem("auth_user", JSON.stringify(user));
       }
 

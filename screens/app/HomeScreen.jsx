@@ -66,7 +66,8 @@ const BookCard = ({
   const imageSource =
     !item.image_url || hasImageError
       ? require("../../assets/avatar.png")
-      : { uri: item.image_url };
+      : {uri: item.image_url} ;
+      // : {uri: item.image_url} ;
 
   // --- PERBAIKAN: Terapkan kelas CSS kondisional di sini ---
   const cardStyle = isReserved
@@ -116,8 +117,8 @@ export default function HomeScreen({ navigation }) {
   const fetchData = async () => {
     const token = await AsyncStorage.getItem("auth_token");
     try {
-      const categoryResponse = await fetch(`${BASE_URL}/api/categories`);
-      const bookResponse = await fetch(`${BASE_URL}/api/books`, {
+      const categoryResponse = await fetch(`${BASE_URL}/api/api/categories`);
+      const bookResponse = await fetch(`${BASE_URL}/api/api/books`, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
@@ -142,7 +143,7 @@ export default function HomeScreen({ navigation }) {
       if (userData) {
         const user = JSON.parse(userData);
         setUserName(user.name || "Guest");
-        const res = await axios.get(`${BASE_URL}/api/user/profile-image`, {
+        const res = await axios.get(`${BASE_URL}/api/api/user/profile-image`, {
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",
@@ -150,7 +151,7 @@ export default function HomeScreen({ navigation }) {
         });
         const image = res.data.profile_image;
         if (image) {
-          setProfileImage(`${BASE_URL}/storage/profile_images/${image}`);
+          setProfileImage(image);
         } else {
           setProfileImage(null);
         }
@@ -166,7 +167,7 @@ export default function HomeScreen({ navigation }) {
     const isFavorited = favorites.includes(bookId);
     const token = await AsyncStorage.getItem("auth_token");
     try {
-      const response = await fetch(`${BASE_URL}/api/favorites`, {
+      const response = await fetch(`${BASE_URL}/api/api/favorites`, {
         method: isFavorited ? "DELETE" : "POST",
         headers: {
           "Content-Type": "application/json",
@@ -187,7 +188,7 @@ export default function HomeScreen({ navigation }) {
 
   const fetchFavorites = async () => {
     const token = await AsyncStorage.getItem("auth_token");
-    const res = await fetch(`${BASE_URL}/api/favorites`, {
+    const res = await fetch(`${BASE_URL}/api/api/favorites`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();

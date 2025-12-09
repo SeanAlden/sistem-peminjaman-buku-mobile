@@ -45,7 +45,7 @@ export default function EditProfileScreen({ navigation }) {
       const token = await AsyncStorage.getItem("auth_token");
 
       const response = await axios.put(
-        `${BASE_URL}/api/user/update`,
+        `${BASE_URL}/api/api/user/update`,
         { name, email },
         {
           headers: {
